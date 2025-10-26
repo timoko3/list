@@ -11,10 +11,18 @@ int main(void){
     listDumpBasic(&list1);
 
     listAdd(&list1, 10);
-    listAdd(&list1, 3);
-    listAdd(&list1, 1);
+    listAdd(&list1, 20);
+    listInsertAfter(&list1, 1, 30);
+    listAdd(&list1, 40);
+    listAdd(&list1, 50);
 
     listDumpBasic(&list1);
+
+    listDelete(&list1, 5);
+
+    listDumpBasic(&list1);
+
+    listAdd(&list1, 69);
 
     listDtor(&list1);
 }

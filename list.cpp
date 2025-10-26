@@ -16,6 +16,8 @@ listStatus listCtor(list_t* list){
 
     listInit(list);
 
+    list->freeCellInd = 1;
+
     list->status = PROCESS_OK;
     return PROCESS_OK;
 }
@@ -37,26 +39,72 @@ listStatus listDtor(list_t* list){
 listStatus listAdd(list_t* lst, listVal_t addValue){
     assert(lst);
 
-    lst->elem[lst->elem->prev].data = addValue;
-    (lst->elem->prev)++;
+    lst->elem[lst->freeCellInd].data = addValue;
+    lst->elem->prev = lst->freeCellInd;
+    lst->freeCellInd = lst->elem[lst->freeCellInd].next;
 
     return PROCESS_OK;
 }
 
-listStatus listInsertAfter(list_t* lst, size_t index, listVal_t insValue){
+listStatus listInsertAfter(list_t* lst, size_t insIndex, listVal_t insValue){
     assert(lst);
 
+    lst->elem[lst->freeCellInd].data = insValue;
 
+    size_t tempInd = lst->elem[insIndex].next;
+
+    lst->elem[insIndex].next = lst->freeCellInd;
+
+    size_t nextFree = lst->elem[lst->freeCellInd].next;
+
+    lst->elem[lst->freeCellInd].next = tempInd;
+    lst->elem[lst->freeCellInd].prev = insIndex;
+
+    lst->elem[tempInd].prev = lst->freeCellInd;
+    lst->freeCellInd = nextFree;
+    lst->elem[lst->elem->prev].next = lst->freeCellInd;
+
+    lst->elem[lst->freeCellInd].prev = lst->elem->prev;
 
     return PROCESS_OK;
 }
+
+listStatus listDelete(list_t* lst, size_t index){
+    assert(lst);
+
+    if(index == lst->elem->prev)lst->elem->prev = lst->elem[index].prev;
+    else if(index == lst->elem->next) {
+        lst->elem->next = lst->elem[index].next;
+        lst->elem[lst->elem->next].prev = 0;
+    }
+    else{
+        lst->elem[lst->elem[index].prev].next = lst->elem[index].next;
+
+        lst->elem[lst->elem[index].next].prev = lst->elem[index].prev;
+
+        lst->freeCellInd = index;
+    }
+
+    lst->elem[index].data = LIST_POISON;
+    lst->elem[index].next = lst->freeCellInd;
+    lst->elem[index].prev = lst->elem->prev;
+
+    return PROCESS_OK;
+}
+
 
 void listDumpBasic(list_t* lst){
     assert(lst);
 
-    printf("listDump:\n\t");
+    printf("listDump:\n");
+
+    printf("\thead: %lu\n", lst->elem->next);
+    printf("\ttail: %lu\n", lst->elem->prev);
+    printf("\tcurFreeElem: %lu\n", lst->freeCellInd);    
+
+    printf("\telements:\n");
     for(size_t curElemInd = 0; curElemInd < lst->capacity; curElemInd++){
-        printf("data: %d, next: %lu, prev: %lu\n", lst->elem->data, lst->elem->next, lst->elem->prev);
+        printf("\t\tdata: %-10d, next: %-3lu, prev: %-3lu\n", lst->elem[curElemInd].data, lst->elem[curElemInd].next, lst->elem[curElemInd].prev);
     }
 }
 
@@ -64,9 +112,9 @@ static listStatus listInit(list_t* list){
     assert(list);
 
     for(size_t fillInd = 1; fillInd < list->capacity; fillInd++){
-        list->elem->data = LIST_POISON;
-        list->elem->next = fillInd + 1;
-        list->elem->prev = fillInd - 1;
+        list->elem[fillInd].data = LIST_POISON;
+        list->elem[fillInd].next = fillInd + 1;
+        list->elem[fillInd].prev = fillInd - 1;
     }
 
     list->elem->data = LIST_POISON;
