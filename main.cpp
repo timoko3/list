@@ -26,5 +26,7 @@ int main(void){
 
     listDumpBasic(&list1);
 
+    listGraphDump(&list1);
+
     listDtor(&list1);
 }

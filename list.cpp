@@ -95,10 +95,7 @@ listStatus listDelete(list_t* list, size_t deleteIndex){
     }
     else{
         next(prev(deleteIndex)) = next(deleteIndex);
-
         prev(next(deleteIndex)) = prev(deleteIndex);
-
-        
     }
 
     data(deleteIndex) = LIST_POISON;
@@ -106,6 +103,7 @@ listStatus listDelete(list_t* list, size_t deleteIndex){
     prev(deleteIndex) = tail;
 
     freeIndex = deleteIndex;
+    next(tail) = freeIndex;
 
     return PROCESS_OK;
 }
@@ -135,24 +133,25 @@ void listGraphDump(list_t* list){
         GRAPH_DUMP_DOT_FILE_NAME,
         "wb"
     };
-
     FILE* graphFilePtr = myOpenFile(&graphDump);
     assert(graphFilePtr);
-
+    
     fprintf(graphFilePtr, "digraph G {\n");
     fprintf(graphFilePtr, "\tnode [shape=ellipse, style=filled, fillcolor=\"lightgray\"];\n\n");
 
     size_t* dumpNodes = (size_t*) calloc(list->capacity, sizeof(size_t));
+    $
     size_t nodeInd = 1;
-    for(size_t curCellInd = head; prev(curCellInd) != tail; curCellInd = next(curCellInd)){
-
+    for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
+        $
+        printf("ind: %lu, prev(ind): %lu\n",curCellInd, prev(curCellInd));
         fprintf(graphFilePtr, "\tnode%lu [label=\"%d\"];\n", nodeInd, data(curCellInd));
         
         dumpNodes[curCellInd] = nodeInd;
         nodeInd++;
     }
     fprintf(graphFilePtr, "\n");
-
+    $
     fprintf(graphFilePtr, "\t{ rank=same; ");
 
     size_t curNodeInd = 1;
@@ -167,7 +166,7 @@ void listGraphDump(list_t* list){
     fprintf(graphFilePtr, "}\n\n");
 
     fprintf(graphFilePtr, "\t");
-    for(size_t curCellInd = head; prev(curCellInd) != tail; curCellInd = next(curCellInd)){
+    for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
 
         fprintf(graphFilePtr, "node%lu", curCellInd);
         
