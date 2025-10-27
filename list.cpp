@@ -132,7 +132,7 @@ void listDump(list_t* lst){
 
     size_t* dumpNodes = (size_t*) calloc(lst->capacity, sizeof(size_t));
     size_t nodeInd = 1;
-    for(size_t curCellInd = lst->elem->next; curCellInd != lst->elem->prev; curCellInd = lst->elem[curCellInd].next){
+    for(size_t curCellInd = lst->elem->next; lst->elem[curCellInd].prev != lst->elem->prev; curCellInd = lst->elem[curCellInd].next){
 
         fprintf(graphFilePtr, "\tnode%lu [label=\"%d\"];\n", nodeInd, lst->elem[curCellInd].data);
         
@@ -155,11 +155,11 @@ void listDump(list_t* lst){
     fprintf(graphFilePtr, "}\n\n");
 
     fprintf(graphFilePtr, "\t");
-    for(size_t curCellInd = lst->elem->next; curCellInd != lst->elem->prev; curCellInd = lst->elem[curCellInd].next){
+    for(size_t curCellInd = lst->elem->next; lst->elem[curCellInd].prev != lst->elem->prev; curCellInd = lst->elem[curCellInd].next){
 
         fprintf(graphFilePtr, "node%lu", curCellInd);
         
-        if(lst->elem[curCellInd].next != lst->elem->prev){
+        if(curCellInd != lst->elem->prev){
             fprintf(graphFilePtr, " -> ");
         }
     }
