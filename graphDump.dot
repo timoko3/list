@@ -1,0 +1,14 @@
+digraph G {
+	node [shape=ellipse, style=filled, fillcolor="lightgray"];
+
+	node1 [label="10"];
+	node3 [label="20"];
+	node2 [label="30"];
+	node4 [label="40"];
+
+	{ rank=same; node1; node3; node2; node4; }
+
+	node1 -> node3 -> node2 -> node4 [style = invis];
+
+	node1 -> node2 -> node3 -> node4;
+}

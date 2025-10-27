@@ -1,0 +1,15 @@
+digraph G {
+  // Задаём подряд расположение 5 элементов
+  node1 [label="Элемент 1"];
+  node2 [label="Элемент 2"];
+  node3 [label="Элемент 3"];
+  node4 [label="Элемент 4"];
+  node5 [label="Элемент 5"];
+
+  {rank=same; node1; node2; node3; node4; node5;}
+
+  // Стрелки — не обязательно подряд
+  node1 ->node2 -> node3 -> node4 -> node5;
+  node2 -> node5;
+  node4 -> node2;
+}

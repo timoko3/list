@@ -27,6 +27,7 @@ listStatus listCtor(list_t* lst);
 listStatus listDtor(list_t* lst);
 
 void listDumpBasic(list_t* lst);
+void listDump(list_t* lst);
 listStatus listAdd(list_t* lst, listVal_t addValue);
 listStatus listInsertAfter(list_t* lst, size_t index, listVal_t insValue);
 listStatus listDelete(list_t* lst, size_t index);

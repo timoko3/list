@@ -17,10 +17,12 @@ int main(void){
     listAdd(&list1, 50);
 
     listDumpBasic(&list1);
+    listDump(&list1);
 
     listDelete(&list1, 5);
 
     listDumpBasic(&list1);
+    // listDump(&list1);
 
     listAdd(&list1, 69);
 

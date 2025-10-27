@@ -1,8 +1,15 @@
 #include "list.h"
+#include "general/file.h"
 #include "general/poison.h"
 
 #include <malloc.h>
 #include <assert.h>
+
+const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDump.dot";
+
+#define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
+
+const size_t MAX_NODE_NAME_SIZE = 20;
 
 static listStatus listInit(list_t* list);
 
@@ -106,6 +113,74 @@ void listDumpBasic(list_t* lst){
     for(size_t curElemInd = 0; curElemInd < lst->capacity; curElemInd++){
         printf("\t\tdata: %-10d, next: %-3lu, prev: %-3lu\n", lst->elem[curElemInd].data, lst->elem[curElemInd].next, lst->elem[curElemInd].prev);
     }
+}
+
+void listDump(list_t* lst){
+    assert(lst);
+
+    fileDescription graphDump = {
+        GRAPH_DUMP_DOT_FILE_NAME,
+        "wb"
+    };
+
+    $
+    FILE* graphFilePtr = myOpenFile(&graphDump);
+    assert(graphFilePtr);
+
+    fprintf(graphFilePtr, "digraph G {\n");
+    fprintf(graphFilePtr, "\tnode [shape=ellipse, style=filled, fillcolor=\"lightgray\"];\n\n");
+
+    size_t* dumpNodes = (size_t*) calloc(lst->capacity, sizeof(size_t));
+    size_t nodeInd = 1;
+    for(size_t curCellInd = lst->elem->next; curCellInd != lst->elem->prev; curCellInd = lst->elem[curCellInd].next){
+
+        fprintf(graphFilePtr, "\tnode%lu [label=\"%d\"];\n", nodeInd, lst->elem[curCellInd].data);
+        
+        dumpNodes[curCellInd] = nodeInd;
+        nodeInd++;
+    }
+    fprintf(graphFilePtr, "\n");
+
+    fprintf(graphFilePtr, "\t{ rank=same; ");
+
+    size_t curNodeInd = 1;
+    while(curNodeInd < nodeInd){
+        if(dumpNodes[curNodeInd] == 0){
+            continue;
+        }
+
+        fprintf(graphFilePtr, "node%lu; ", dumpNodes[curNodeInd]);
+        curNodeInd++;
+    }
+    fprintf(graphFilePtr, "}\n\n");
+
+    fprintf(graphFilePtr, "\t");
+    for(size_t curCellInd = lst->elem->next; curCellInd != lst->elem->prev; curCellInd = lst->elem[curCellInd].next){
+
+        fprintf(graphFilePtr, "node%lu", curCellInd);
+        
+        if(lst->elem[curCellInd].next != lst->elem->prev){
+            fprintf(graphFilePtr, " -> ");
+        }
+    }
+    fprintf(graphFilePtr, " [style = invis];\n\n");
+
+    
+    fprintf(graphFilePtr, "\t");
+    for(curNodeInd = 1; curNodeInd < nodeInd; curNodeInd++){
+        fprintf(graphFilePtr, "node%lu", curNodeInd);
+        if(nodeInd - curNodeInd > 1){
+            fprintf(graphFilePtr, " -> ");
+        }
+        else{
+            fprintf(graphFilePtr, ";");
+        }
+    }
+
+    fprintf(graphFilePtr, "\n}");
+
+    fclose(graphFilePtr);
+    free(dumpNodes);
 }
 
 static listStatus listInit(list_t* list){
