@@ -23,11 +23,11 @@ struct list_t{
     listStatus  status;
 };
 
-listStatus listCtor(list_t* lst);
-listStatus listDtor(list_t* lst);
+listStatus listCtor(list_t* list);
+listStatus listDtor(list_t* list);
 
-void listDumpBasic(list_t* lst);
-void listDump(list_t* lst);
-listStatus listAdd(list_t* lst, listVal_t addValue);
-listStatus listInsertAfter(list_t* lst, size_t index, listVal_t insValue);
-listStatus listDelete(list_t* lst, size_t index);
+void listDumpBasic(list_t* list);
+void listGraphDump(list_t* list);
+listStatus listAdd(list_t* list, listVal_t addValue);
+listStatus listInsertAfter(list_t* list, size_t index, listVal_t insValue);
+listStatus listDelete(list_t* list, size_t index);

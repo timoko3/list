@@ -12,19 +12,19 @@ int main(void){
 
     listAdd(&list1, 10);
     listAdd(&list1, 20);
-    listInsertAfter(&list1, 1, 30);
+    listInsertAfter(&list1, 1, 17);
     listAdd(&list1, 40);
     listAdd(&list1, 50);
 
     listDumpBasic(&list1);
-    listDump(&list1);
 
-    listDelete(&list1, 5);
+    listDelete(&list1, 3);
 
     listDumpBasic(&list1);
-    // listDump(&list1);
 
     listAdd(&list1, 69);
+
+    listDumpBasic(&list1);
 
     listDtor(&list1);
 }
