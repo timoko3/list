@@ -137,54 +137,37 @@ void listGraphDump(list_t* list){
     assert(graphFilePtr);
     
     fprintf(graphFilePtr, "digraph G {\n");
-    fprintf(graphFilePtr, "\tnode [shape=ellipse, style=filled, fillcolor=\"lightgray\"];\n\n");
-
+    fprintf(graphFilePtr, "bgcolor=\"transparent\"\n");
+    fprintf(graphFilePtr, "\tnode [shape=Mrecord, style=\"filled\", fillcolor=\"#FFA089\", fontcolor=\"black\", color=\"#007CAD\", penwidth=2.5, fontname=\"Tahoma\", fontsize=25];\n\n");
+    fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];");
     size_t* dumpNodes = (size_t*) calloc(list->capacity, sizeof(size_t));
     $
     size_t nodeInd = 1;
     for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
         $
         printf("ind: %lu, prev(ind): %lu\n",curCellInd, prev(curCellInd));
-        fprintf(graphFilePtr, "\tnode%lu [label=\"%d\"];\n", nodeInd, data(curCellInd));
+        fprintf(graphFilePtr, "\tnode%lu [label=\"{phys idx = %lu | data = %d | {prev = %lu | next = %lu} }\"];\n", nodeInd, curCellInd, data(curCellInd), prev(curCellInd), next(curCellInd));
         
         dumpNodes[curCellInd] = nodeInd;
         nodeInd++;
     }
     fprintf(graphFilePtr, "\n");
-    $
-    fprintf(graphFilePtr, "\t{ rank=same; ");
+    
+    fprintf(graphFilePtr, " head_label [shape=box, label=\"HEAD\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"yellow\", fontcolor=\"darkblue\"];");
+    fprintf(graphFilePtr, " tail_label [shape=box, label=\"TAIL\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"yellow\", fontcolor=\"darkblue\"];");
 
-    size_t curNodeInd = 1;
-    while(curNodeInd < nodeInd){
-        if(dumpNodes[curNodeInd] == 0){
-            continue;
-        }
 
-        fprintf(graphFilePtr, "node%lu; ", dumpNodes[curNodeInd]);
-        curNodeInd++;
-    }
-    fprintf(graphFilePtr, "}\n\n");
-
-    fprintf(graphFilePtr, "\t");
-    for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
-
-        fprintf(graphFilePtr, "node%lu", curCellInd);
-        
-        if(curCellInd != tail){
-            fprintf(graphFilePtr, " -> ");
-        }
-    }
-    fprintf(graphFilePtr, " [style = invis];\n\n");
-
+    fprintf(graphFilePtr, "head_label -> node1 [color=\"yellow\", arrowsize=2.5, penwidth=3];");
+    fprintf(graphFilePtr, "tail_label -> node3 [color=\"yellow\", arrowsize=2.5, penwidth=3];");
     
     fprintf(graphFilePtr, "\t");
-    for(curNodeInd = 1; curNodeInd < nodeInd; curNodeInd++){
+    for(size_t curNodeInd = 1; curNodeInd < nodeInd; curNodeInd++){
         fprintf(graphFilePtr, "node%lu", curNodeInd);
         if(nodeInd - curNodeInd > 1){
             fprintf(graphFilePtr, " -> ");
         }
         else{
-            fprintf(graphFilePtr, ";");
+            fprintf(graphFilePtr, "[minlen = 2];");
         }
     }
 
