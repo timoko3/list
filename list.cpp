@@ -138,28 +138,41 @@ void listGraphDump(list_t* list){
     
     fprintf(graphFilePtr, "digraph G {\n");
     fprintf(graphFilePtr, "bgcolor=\"transparent\"\n");
-    fprintf(graphFilePtr, "\tnode [shape=Mrecord, style=\"filled\", fillcolor=\"#FFA089\", fontcolor=\"black\", color=\"#007CAD\", penwidth=2.5, fontname=\"Tahoma\", fontsize=25];\n\n");
-    fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];");
+
+    fprintf(graphFilePtr, "\tnode [shape=record, style=\"filled\", fillcolor=\"#FFA089\", fontcolor=\"black\", color=\"#007CAD\", penwidth=2.5, fontname=\"Tahoma\", fontsize=25];\n\n");
+    fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];\n");
+    fprintf(graphFilePtr, "params [label=\"{head = %lu | tail = %lu | free_tail = %lu}\", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", head, tail, freeIndex);
+
     size_t* dumpNodes = (size_t*) calloc(list->capacity, sizeof(size_t));
-    $
+    
     size_t nodeInd = 1;
+    size_t headNodeInd = 0;
+    size_t tailNodeInd = 0;
     for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
         $
         printf("ind: %lu, prev(ind): %lu\n",curCellInd, prev(curCellInd));
         fprintf(graphFilePtr, "\tnode%lu [label=\"{phys idx = %lu | data = %d | {prev = %lu | next = %lu} }\"];\n", nodeInd, curCellInd, data(curCellInd), prev(curCellInd), next(curCellInd));
+
+        if(curCellInd == head){
+            headNodeInd = nodeInd;
+        }
+        else if(curCellInd == tail){
+            tailNodeInd = nodeInd;  
+        }
         
         dumpNodes[curCellInd] = nodeInd;
         nodeInd++;
     }
     fprintf(graphFilePtr, "\n");
     
-    fprintf(graphFilePtr, " head_label [shape=box, label=\"HEAD\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"yellow\", fontcolor=\"darkblue\"];");
-    fprintf(graphFilePtr, " tail_label [shape=box, label=\"TAIL\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"yellow\", fontcolor=\"darkblue\"];");
+    fprintf(graphFilePtr, " head_label [shape=box, label=\"HEAD\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"yellow\", fontcolor=\"darkblue\"];\n");
+    fprintf(graphFilePtr, " tail_label [shape=box, label=\"TAIL\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"yellow\", fontcolor=\"darkblue\"];\n");
 
 
-    fprintf(graphFilePtr, "head_label -> node1 [color=\"yellow\", arrowsize=2.5, penwidth=3];");
-    fprintf(graphFilePtr, "tail_label -> node3 [color=\"yellow\", arrowsize=2.5, penwidth=3];");
+    fprintf(graphFilePtr, "head_label -> node%lu [color=\"yellow\", arrowsize=2.5, penwidth=3];\n", headNodeInd);
+    fprintf(graphFilePtr, "tail_label -> node%lu [color=\"yellow\", arrowsize=2.5, penwidth=3];\n", tailNodeInd);
     
+    /// установка связи между нодами
     fprintf(graphFilePtr, "\t");
     for(size_t curNodeInd = 1; curNodeInd < nodeInd; curNodeInd++){
         fprintf(graphFilePtr, "node%lu", curNodeInd);
@@ -167,9 +180,19 @@ void listGraphDump(list_t* list){
             fprintf(graphFilePtr, " -> ");
         }
         else{
-            fprintf(graphFilePtr, "[minlen = 2];");
+            fprintf(graphFilePtr, "[color=\"lime\", arrowsize=1.5, penwidth=2];\n");
         }
     }
+    /// установка node в нужном порядке
+    fprintf(graphFilePtr, "{rank=same; params; node1;}\n");
+    
+    fprintf(graphFilePtr, "{rank=same; ");
+    for(size_t curNodeInd = 1; curNodeInd < nodeInd; curNodeInd++){
+
+        fprintf(graphFilePtr, "node%lu; ", curNodeInd);
+        
+    }
+    fprintf(graphFilePtr, "}\n");
 
     fprintf(graphFilePtr, "\n}");
 
