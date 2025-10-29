@@ -8,13 +8,11 @@ int main(void){
 
     listCtor(&list1);
 
+
     listDumpBasic(&list1);
 
-    listAdd(&list1, 10);
-    listAdd(&list1, 20);
-    listInsertAfter(&list1, 1, 17);
-    listAdd(&list1, 40);
-    listAdd(&list1, 50);
+    listGraphDump(&list1);
+
 
     listDumpBasic(&list1);
 
@@ -22,11 +20,9 @@ int main(void){
 
     listDumpBasic(&list1);
 
-    listAdd(&list1, 69);
-
     listDumpBasic(&list1);
 
-    listGraphDump(&list1);
+    
 
     listDtor(&list1);
 }
