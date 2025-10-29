@@ -41,11 +41,11 @@ listStatus listDtor(list_t* list){
     return PROCESS_OK;
 }
 
-listStatus listInsertAfter(list_t* list, size_t insIndex, listVal_t insValue){
+listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue){
     assert(list);
     
     *data(list, *freeInd(list)) = insValue;
-    size_t insertedCellPhysInd = *freeInd(list);
+    listVal_t insertedCellPhysInd = *freeInd(list);
     *freeInd(list) = *next(list, *freeInd(list));
 
     *next(list, insertedCellPhysInd) = *next(list, insIndex);
@@ -60,7 +60,7 @@ listStatus listInsertAfter(list_t* list, size_t insIndex, listVal_t insValue){
     return PROCESS_OK;
 }
 
-listStatus listDelete(list_t* list, size_t deleteIndex){
+listStatus listDelete(list_t* list, listVal_t deleteIndex){
     assert(list);
 
     if(deleteIndex     == *tail(list)){
@@ -89,9 +89,9 @@ static listStatus listInit(list_t* list){
     assert(list);
 
     for(size_t fillInd = 1; fillInd < list->capacity; fillInd++){
-        *data(list, fillInd) = LIST_POISON;
-        *next(list, fillInd) = fillInd + 1;
-        *prev(list, fillInd) = fillInd - 1;
+        *data(list, (listVal_t) fillInd) = LIST_POISON;
+        *next(list, (listVal_t) fillInd) = (listVal_t) fillInd + 1;
+        *prev(list, (listVal_t) fillInd) = (listVal_t) fillInd - 1;
     }
 
     *data(list, 0) = LIST_POISON;

@@ -7,7 +7,7 @@
 listStatus listCtor(list_t* list);
 listStatus listDtor(list_t* list);
 
-listStatus listInsertAfter(list_t* list, size_t index, listVal_t insValue);
-listStatus listDelete(list_t* list, size_t index);
+listStatus listInsertAfter(list_t* list, listVal_t index, listVal_t insValue);
+listStatus listDelete(list_t* list, listVal_t index);
 
 #endif /* LIST_H */

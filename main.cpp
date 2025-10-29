@@ -28,7 +28,5 @@ int main(void){
 
     listDumpBasic(&list1);
 
-    
-
     listDtor(&list1);
 }

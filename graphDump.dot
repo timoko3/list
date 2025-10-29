@@ -15,9 +15,9 @@ node0 [label="head = 5 | tail = 1 | free_tail = 7", shape=record, style="filled"
 	node8 [label="phys idx = 8 | *data = 2147483647 | {*prev = 7 | *next = 9} "];
 	node9 [label="phys idx = 9 | *data = 2147483647 | {*prev = 8 | *next = 10} "];
 
-head_label [shape=box, label="*head(list)", style="filled", fillcolor="#BBDDEE", color="lime", fontcolor="darkblue"];
-tail_label [shape=box, label="*tail(list)", style="filled", fillcolor="#BBDDEE", color="#DC143C",   fontcolor="darkblue"];
-free_head_label [shape=box, label="FREE", style="filled"  , fillcolor="#BBDDEE", color="#6A5ACD",   fontcolor="darkblue"];
+head_label      [shape=box, label="HEAD", style="filled", fillcolor="#BBDDEE", color="lime", fontcolor="darkblue"];
+tail_label      [shape=box, label="TAIL", style="filled", fillcolor="#BBDDEE", color="#DC143C",   fontcolor="darkblue"];
+free_head_label [shape=box, label="FREE", style="filled", fillcolor="#BBDDEE", color="#6A5ACD",   fontcolor="darkblue"];
 head_label      -> node5 [color="lime", arrowsize=2.5, penwidth=3];
 tail_label      -> node1 [color="#DC143C"  , arrowsize=2.5, penwidth=3];
 free_head_label -> node7 [color="#6A5ACD"  , arrowsize=2.5, penwidth=3];
