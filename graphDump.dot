@@ -4,23 +4,37 @@ bgcolor="transparent"
 	node [shape=record, style="filled", fillcolor="#FFA089", fontcolor="black", color="#007CAD", penwidth=2.5, fontname="Tahoma", fontsize=25];
 
 edge [color="#2d714f", arrowsize=1, penwidth=5, arrowhead="vee", style="bold"];
-node0 [label="head = 0 | tail = 0 | free_tail = 1", shape=record, style="filled", fillcolor="#222222", fontcolor="yellow", color="yellow", penwidth=2];
-	node1 [label="phys idx = 1 | data = 2147483647 | {prev = 0 | next = 2} "];
-	node2 [label="phys idx = 2 | data = 2147483647 | {prev = 1 | next = 3} "];
-	node3 [label="phys idx = 3 | data = 2147483647 | {prev = 2 | next = 4} "];
-	node4 [label="phys idx = 4 | data = 2147483647 | {prev = 3 | next = 5} "];
-	node5 [label="phys idx = 5 | data = 2147483647 | {prev = 4 | next = 6} "];
-	node6 [label="phys idx = 6 | data = 2147483647 | {prev = 5 | next = 7} "];
-	node7 [label="phys idx = 7 | data = 2147483647 | {prev = 6 | next = 8} "];
+node0 [label="head = 5 | tail = 1 | free_tail = 7", shape=record, style="filled", fillcolor="#222222", fontcolor="yellow", color="yellow", penwidth=2];
+	node1 [label="phys idx = 1 | data = 20 | {prev = 6 | next = 7} "];
+	node2 [label="phys idx = 2 | data = 30 | {prev = 3 | next = 6} "];
+	node3 [label="phys idx = 3 | data = 40 | {prev = 4 | next = 2} "];
+	node4 [label="phys idx = 4 | data = 50 | {prev = 5 | next = 3} "];
+	node5 [label="phys idx = 5 | data = 60 | {prev = 0 | next = 4} "];
+	node6 [label="phys idx = 6 | data = 1000 | {prev = 2 | next = 1} "];
+	node7 [label="phys idx = 7 | data = 2147483647 | {prev = 1 | next = 8} "];
 	node8 [label="phys idx = 8 | data = 2147483647 | {prev = 7 | next = 9} "];
 	node9 [label="phys idx = 9 | data = 2147483647 | {prev = 8 | next = 10} "];
 
 head_label [shape=box, label="HEAD", style="filled", fillcolor="#BBDDEE", color="lime", fontcolor="darkblue"];
 tail_label [shape=box, label="TAIL", style="filled", fillcolor="#BBDDEE", color="red", fontcolor="darkblue"];
 free_head_label [shape=box, label="FREE", style="filled", fillcolor="#BBDDEE", color="purple", fontcolor="darkblue"];
-head_label -> node0 [color="lime", arrowsize=2.5, penwidth=3];
-tail_label -> node0 [color="red", arrowsize=2.5, penwidth=3];
-free_head_label -> node1 [color="purple", arrowsize=2.5, penwidth=3];
+head_label -> node5 [color="lime", arrowsize=2.5, penwidth=3];
+tail_label -> node1 [color="red", arrowsize=2.5, penwidth=3];
+free_head_label -> node7 [color="purple", arrowsize=2.5, penwidth=3];
 node0 -> node1[style=invis, weight = 100000]	node1 -> node2 -> node3 -> node4 -> node5 -> node6 -> node7 -> node8 -> node9[style=invis, weight=1000000];
-	
+	node5 -> node4 -> node3 -> node2 -> node6 -> node1[color="lime", arrowsize=1.5, penwidth=2, weight=100000];
+
+	node5[color = "lime", penwidth=4];
+	node4[color = "lime", penwidth=4];
+	node3[color = "lime", penwidth=4];
+	node2[color = "lime", penwidth=4];
+	node6[color = "lime", penwidth=4];
+	node1[color = "lime", penwidth=4];
+
+	node7 -> node8 -> node9[color="purple", arrowsize=1.5, penwidth=2, weight=100000];
+
+	node7[color = "purple", penwidth=4];
+	node8[color = "purple", penwidth=4];
+	node9[color = "purple", penwidth=4];
+
 }

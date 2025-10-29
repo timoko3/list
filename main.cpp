@@ -11,12 +11,19 @@ int main(void){
 
     listDumpBasic(&list1);
 
+    listInsertAfter(&list1, 0, 20);
+
+    listInsertAfter(&list1, 0, 30);
+
+    listInsertAfter(&list1, 0, 40);
+
+    listInsertAfter(&list1, 0, 50);
+
+    listInsertAfter(&list1, 0, 60);
+
+    listInsertAfter(&list1, 2, 1000);
+
     listGraphDump(&list1);
-
-
-    listDumpBasic(&list1);
-
-    listDelete(&list1, 3);
 
     listDumpBasic(&list1);
 

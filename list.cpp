@@ -130,7 +130,6 @@ void listGraphDump(list_t* list){
 
     fprintf(graphFilePtr, "\tnode [shape=record, style=\"filled\", fillcolor=\"#FFA089\", fontcolor=\"black\", color=\"#007CAD\", penwidth=2.5, fontname=\"Tahoma\", fontsize=25];\n\n");
     fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];\n");
-    // fprintf(graphFilePtr, "params [label=\"head = %lu | tail = %lu | free_tail = %lu\", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", head, tail, freeIndex);
     
     size_t headNodeInd = 0;
     size_t tailNodeInd = 0;
@@ -186,13 +185,39 @@ void listGraphDump(list_t* list){
         }
     }
 
-    for(size_t curCellInd = tail; (next(curCellInd) != head) || (data(curCellInd) != LIST_POISON); curCellInd = prev(curCellInd)){
+    //Подсветка рамки для зеленого 
+    fprintf(graphFilePtr, "\n");
+    for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
+        
+        fprintf(graphFilePtr, "\tnode%lu[color = \"lime\", penwidth=4];\n", curCellInd);
+
+    }
+
+    fprintf(graphFilePtr, "\n\t");
+    for(size_t curCellInd = freeIndex; curCellInd < list->capacity; curCellInd = next(curCellInd)){
         fprintf(graphFilePtr, "node%lu", curCellInd);
-        if(curCellInd != head){
+        if(next(curCellInd) != list->capacity){
             fprintf(graphFilePtr, " -> ");
         }
-            fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+        else{
+            fprintf(graphFilePtr, "[color=\"purple\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+        }
     }
+
+    fprintf(graphFilePtr, "\n");
+    for(size_t curCellInd = freeIndex; curCellInd < list->capacity; curCellInd = next(curCellInd)){
+        
+        fprintf(graphFilePtr, "\tnode%lu[color = \"purple\", penwidth=4];\n", curCellInd);
+
+    }
+
+    // for(size_t curCellInd = tail; (next(curCellInd) != head) || (data(curCellInd) != LIST_POISON); curCellInd = prev(curCellInd)){
+    //     fprintf(graphFilePtr, "node%lu", curCellInd);
+    //     if(curCellInd != head){
+    //         fprintf(graphFilePtr, " -> ");
+    //     }
+    //         fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+    // }
 
     fprintf(graphFilePtr, "\n}");
 
