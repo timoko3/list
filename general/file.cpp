@@ -15,7 +15,7 @@ static string* divideBufferToStringsStructure(char* buffer, size_t nStrings);
 static void printBuffer(char* buffer);
 #endif /* DEBUG */
 
-int parseStringsFile(data* data, const char* fileName){
+int parseStringsFile(data_t* data, const char* fileName){
     assert(data);
     assert(fileName);
 
