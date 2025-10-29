@@ -29,6 +29,6 @@ node0 -> node1[style=invis, weight = 100000]	node1 -> node2 -> node3 -> node4 ->
 	node7[color = "#6A5ACD", penwidth=4];
 	node8[color = "#6A5ACD", penwidth=4];
 	node9[color = "#6A5ACD", penwidth=4];
-node1 -> node6 -> node2 -> node3 -> node4 -> node5[color="red", arrowsize=1.5, penwidth=2, weight=100000];
+node1 -> node6 -> node2 -> node3 -> node4 -> node5[color="red", arrowsize=1.5, penwidth=2, weight=100000, headport=n];
 
 }

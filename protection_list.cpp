@@ -117,7 +117,7 @@ void listGraphDump(list_t* list){
             fprintf(graphFilePtr, " -> ");
         }
         else{
-            fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+            fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000, headport=n];\n");
         }
     }
 
