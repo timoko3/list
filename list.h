@@ -11,15 +11,15 @@ enum listStatus{
 
 struct listElem_t{
     listVal_t data;
-    size_t    next;
-    size_t    prev;
+    listVal_t next;
+    listVal_t prev;
 };
 
 struct list_t{
     listElem_t* elem;
+    listVal_t   freeCellInd;
     size_t      size;
     size_t      capacity;
-    size_t      freeCellInd;
     listStatus  status;
 };
 

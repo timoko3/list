@@ -8,7 +8,6 @@ int main(void){
 
     listCtor(&list1);
 
-
     listDumpBasic(&list1);
 
     listInsertAfter(&list1, 0, 20);

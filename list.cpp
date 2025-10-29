@@ -7,26 +7,28 @@
 
 #define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
 
-#define head list->elem->next
-#define tail list->elem->prev
-
-#define data(index) list->elem[index].data
-#define next(index) list->elem[index].next
-#define prev(index) list->elem[index].prev
-
-#define freeIndex   list->freeCellInd
-
 const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDump.dot";
 const size_t MAX_NODE_NAME_SIZE      = 20;
 
+const char* DIRECT_CHAIN_COLOR  = "#98FB98";
+const char* REVERSE_CHAIN_COLOR = "#DC143C";
+const char* FREE_CHAIN_COLOR    = "#6A5ACD";
+
 static listStatus listInit(list_t* list);
+
+static listVal_t* data(list_t* list, listVal_t index);
+static listVal_t* next(list_t* list, listVal_t index);
+static listVal_t* prev(list_t* list, listVal_t index);
+static listVal_t* head(list_t* list);
+static listVal_t* tail(list_t* list);
+static listVal_t* freeT(list_t* list);
 
 listStatus listCtor(list_t* list){
     assert(list);
     assert(list->capacity > 2);
 
-    list->size        = 0;
-    freeIndex = 1;
+    list->size   = 0;
+    *freeT(list) = 1;
 
     list->elem = (listElem_t*) calloc(list->capacity, sizeof(listElem_t));
     assert(list->elem);
@@ -46,7 +48,7 @@ listStatus listDtor(list_t* list){
 
     poisonMemory(&list->size,        sizeof(list->size));
     poisonMemory(&list->capacity,    sizeof(list->capacity));
-    poisonMemory(&freeIndex, sizeof(freeIndex));
+    poisonMemory(&*freeT(list), sizeof(*freeT(list)));
     poisonMemory(&list->status,      sizeof(list->status));
 
     return PROCESS_OK;
@@ -55,18 +57,18 @@ listStatus listDtor(list_t* list){
 listStatus listInsertAfter(list_t* list, size_t insIndex, listVal_t insValue){
     assert(list);
     
-    data(freeIndex) = insValue;
-    size_t insertedCellPhysInd = freeIndex;
-    freeIndex = next(freeIndex);
+    *data(list, *freeT(list)) = insValue;
+    size_t insertedCellPhysInd = *freeT(list);
+    *freeT(list) = *next(list, *freeT(list));
 
-    next(insertedCellPhysInd) = next(insIndex);
-    prev(insertedCellPhysInd) = insIndex;
+    *next(list, insertedCellPhysInd) = *next(list, insIndex);
+    *prev(list, insertedCellPhysInd) = insIndex;
 
-    prev(next(insIndex)) = insertedCellPhysInd;
-    next(insIndex) = insertedCellPhysInd;
+    *prev(list, *next(list, insIndex)) = insertedCellPhysInd;
+    *next(list, insIndex) = insertedCellPhysInd;
 
-    next(tail) = freeIndex;
-    prev(freeIndex) = tail;
+    *next(list, *tail(list)) = *freeT(list);
+    *prev(list, *freeT(list)) = *tail(list);
 
     return PROCESS_OK;
 }
@@ -74,24 +76,24 @@ listStatus listInsertAfter(list_t* list, size_t insIndex, listVal_t insValue){
 listStatus listDelete(list_t* list, size_t deleteIndex){
     assert(list);
 
-    if(deleteIndex      == tail){
-        tail = prev(deleteIndex);
+    if(deleteIndex     == *tail(list)){
+        *tail(list) = *prev(list, deleteIndex);
     }
-    else if(deleteIndex == head){
-        head = next(deleteIndex);
-        prev(head) = 0;
+    else if(deleteIndex == *head(list)){
+        *head(list) = *next(list, deleteIndex);
+        *prev(list, *head(list)) = 0;
     }
     else{
-        next(prev(deleteIndex)) = next(deleteIndex);
-        prev(next(deleteIndex)) = prev(deleteIndex);
+        *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
+        *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
     }
 
-    data(deleteIndex) = LIST_POISON;
-    next(deleteIndex) = freeIndex;
-    prev(deleteIndex) = tail;
+    *data(list, deleteIndex) = LIST_POISON;
+    *next(list, deleteIndex) = *freeT(list);
+    *prev(list, deleteIndex) = *tail(list);
 
-    freeIndex = deleteIndex;
-    next(tail) = freeIndex;
+    *freeT(list) = deleteIndex;
+    *next(list, *tail(list)) = *freeT(list);
 
     return PROCESS_OK;
 }
@@ -102,15 +104,15 @@ void listDumpBasic(list_t* list){
 
     printf("listGraphDump:\n");
 
-    printf("\thead: %lu\n", head);
-    printf("\ttail: %lu\n", tail);
-    printf("\tcurFreeElem: %lu\n", freeIndex);    
+    printf("\t*head(list): %lu\n", *head(list));
+    printf("\t*tail(list): %lu\n", *tail(list));
+    printf("\tcurFreeElem: %lu\n", *freeT(list));    
 
     printf("\telements:\n");
     for(size_t curElemInd = 0; curElemInd < list->capacity; curElemInd++){
-        printf("\t\tdata: %-10d, next: %-3lu, prev: %-3lu\n", data(curElemInd), 
-                                                              next(curElemInd), 
-                                                              prev(curElemInd));
+        printf("\t\t*data: %-10d, *next: %-3lu, *prev: %-3lu\n", *data(list, curElemInd), 
+                                                              *next(list, curElemInd), 
+                                                              *prev(list, curElemInd));
     }
 }
 
@@ -135,30 +137,30 @@ void listGraphDump(list_t* list){
     size_t tailNodeInd = 0;
     for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
         if(curCellInd == 0){
-            fprintf(graphFilePtr, "node0 [label=\"head = %lu | tail = %lu | free_tail = %lu\", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", head, tail, freeIndex);
+            fprintf(graphFilePtr, "node0 [label=\"head = %lu | tail = %lu | free_tail = %lu\", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", *head(list), *tail(list), *freeT(list));
             continue;
         }
 
-        fprintf(graphFilePtr, "\tnode%lu [label=\"phys idx = %lu | data = %d | {prev = %lu | next = %lu} \"];\n", curCellInd, curCellInd, data(curCellInd), prev(curCellInd), next(curCellInd));
+        fprintf(graphFilePtr, "\tnode%lu [label=\"phys idx = %lu | *data = %d | {*prev = %lu | *next = %lu} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
 
-        if(curCellInd == head){
+        if(curCellInd == *head(list)){
             headNodeInd = curCellInd;
         }
-        else if(curCellInd == tail){
+        else if(curCellInd == *tail(list)){
             tailNodeInd = curCellInd;  
         }
         
     }
     fprintf(graphFilePtr, "\n");
     
-    fprintf(graphFilePtr, "head_label [shape=box, label=\"HEAD\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"lime\", fontcolor=\"darkblue\"];\n");
-    fprintf(graphFilePtr, "tail_label [shape=box, label=\"TAIL\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"red\", fontcolor=\"darkblue\"];\n");
-    fprintf(graphFilePtr, "free_head_label [shape=box, label=\"FREE\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"purple\", fontcolor=\"darkblue\"];\n");
+    fprintf(graphFilePtr, "head_label [shape=box, label=\"*head(list)\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"lime\", fontcolor=\"darkblue\"];\n", DIRECT_CHAIN_COLOR);
+    fprintf(graphFilePtr, "tail_label [shape=box, label=\"*tail(list)\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\",   fontcolor=\"darkblue\"];\n", REVERSE_CHAIN_COLOR);
+    fprintf(graphFilePtr, "free_head_label [shape=box, label=\"FREE\", style=\"filled\"  , fillcolor=\"#BBDDEE\", color=\"%s\",   fontcolor=\"darkblue\"];\n", FREE_CHAIN_COLOR);
 
 
-    fprintf(graphFilePtr, "head_label -> node%lu [color=\"lime\", arrowsize=2.5, penwidth=3];\n", head);
-    fprintf(graphFilePtr, "tail_label -> node%lu [color=\"red\", arrowsize=2.5, penwidth=3];\n", tail);
-    fprintf(graphFilePtr, "free_head_label -> node%lu [color=\"purple\", arrowsize=2.5, penwidth=3];\n", freeIndex);
+    fprintf(graphFilePtr, "head_label      -> node%lu [color=\"lime\", arrowsize=2.5, penwidth=3];\n", *head(list), DIRECT_CHAIN_COLOR);
+    fprintf(graphFilePtr, "tail_label      -> node%lu [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *tail(list), REVERSE_CHAIN_COLOR);
+    fprintf(graphFilePtr, "free_head_label -> node%lu [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *freeT(list), FREE_CHAIN_COLOR);
     
     // установка нодов по индексам
     fprintf(graphFilePtr, "node0 -> node1[style=invis, weight = 100000]");
@@ -173,47 +175,47 @@ void listGraphDump(list_t* list){
         }
     }
 
-    /// установка связи между занятыми элементами списка от head
+    /// установка связи между занятыми элементами списка от *head(list)
     fprintf(graphFilePtr, "\t");
-    for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
+    for(size_t curCellInd = *head(list); (*prev(list, curCellInd) != *tail(list)) && (*data(list, curCellInd) != LIST_POISON); curCellInd = *next(list, curCellInd)){
         fprintf(graphFilePtr, "node%lu", curCellInd);
-        if(curCellInd != tail){
+        if(curCellInd != *tail(list)){
             fprintf(graphFilePtr, " -> ");
         }
         else{
-            fprintf(graphFilePtr, "[color=\"lime\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=2, weight=100000];\n", DIRECT_CHAIN_COLOR);
         }
     }
 
     //Подсветка рамки для зеленого 
     fprintf(graphFilePtr, "\n");
-    for(size_t curCellInd = head; (prev(curCellInd) != tail) && (data(curCellInd) != LIST_POISON); curCellInd = next(curCellInd)){
+    for(size_t curCellInd = *head(list); (*prev(list, curCellInd) != *tail(list)) && (*data(list, curCellInd) != LIST_POISON); curCellInd = *next(list, curCellInd)){
         
-        fprintf(graphFilePtr, "\tnode%lu[color = \"lime\", penwidth=4];\n", curCellInd);
+        fprintf(graphFilePtr, "\tnode%lu[color = \"%s\", penwidth=4];\n", curCellInd, DIRECT_CHAIN_COLOR);
 
     }
 
     fprintf(graphFilePtr, "\n\t");
-    for(size_t curCellInd = freeIndex; curCellInd < list->capacity; curCellInd = next(curCellInd)){
+    for(size_t curCellInd = *freeT(list); curCellInd < list->capacity; curCellInd = *next(list, curCellInd)){
         fprintf(graphFilePtr, "node%lu", curCellInd);
-        if(next(curCellInd) != list->capacity){
+        if(*next(list, curCellInd) != list->capacity){
             fprintf(graphFilePtr, " -> ");
         }
         else{
-            fprintf(graphFilePtr, "[color=\"purple\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=2, weight=100000];\n", FREE_CHAIN_COLOR);
         }
     }
 
     fprintf(graphFilePtr, "\n");
-    for(size_t curCellInd = freeIndex; curCellInd < list->capacity; curCellInd = next(curCellInd)){
+    for(size_t curCellInd = *freeT(list); curCellInd < list->capacity; curCellInd = *next(list, curCellInd)){
         
-        fprintf(graphFilePtr, "\tnode%lu[color = \"purple\", penwidth=4];\n", curCellInd);
+        fprintf(graphFilePtr, "\tnode%lu[color = \"%s\", penwidth=4];\n", curCellInd, FREE_CHAIN_COLOR);
 
     }
 
-    // for(size_t curCellInd = tail; (next(curCellInd) != head) || (data(curCellInd) != LIST_POISON); curCellInd = prev(curCellInd)){
+    // for(size_t curCellInd = *tail(list); (*next(list, curCellInd) != *head(list)) || (*data(list, curCellInd) != LIST_POISON); curCellInd = *prev(list, curCellInd)){
     //     fprintf(graphFilePtr, "node%lu", curCellInd);
-    //     if(curCellInd != head){
+    //     if(curCellInd != *head(list)){
     //         fprintf(graphFilePtr, " -> ");
     //     }
     //         fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000];\n");
@@ -230,15 +232,39 @@ static listStatus listInit(list_t* list){
     assert(list);
 
     for(size_t fillInd = 1; fillInd < list->capacity; fillInd++){
-        data(fillInd) = LIST_POISON;
-        next(fillInd) = fillInd + 1;
-        prev(fillInd) = fillInd - 1;
+        *data(list, fillInd) = LIST_POISON;
+        *next(list, fillInd) = fillInd + 1;
+        *prev(list, fillInd) = fillInd - 1;
     }
 
-    data(0) = LIST_POISON;
-    head = 0;
-    tail = 0;
+    *data(list, 0) = LIST_POISON;
+    *head(list) = 0;
+    *tail(list) = 0;
 
     return PROCESS_OK;
 }
 
+static listVal_t* data(list_t* list, listVal_t index){
+    return &list->elem[index].data;
+}
+
+static listVal_t* next(list_t* list, listVal_t index){
+    return &list->elem[index].next;
+}
+
+static listVal_t* prev(list_t* list, listVal_t index){
+    return &list->elem[index].prev;
+}
+
+static listVal_t* head(list_t* list){
+    return &list->elem->next;
+}
+
+static listVal_t* tail(list_t* list){
+    return &list->elem->prev;
+}
+
+
+static listVal_t* freeT(list_t* list){
+    return &list->freeCellInd;
+}
