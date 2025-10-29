@@ -26,8 +26,8 @@ void listDumpBasic(list_t* list){
     printf("\telements:\n");
     for(listVal_t curElemInd = 0; curElemInd < (listVal_t) list->capacity; curElemInd++){
         printf("\t\tdata: %-10d, next: %-3d, prev: %-3d\n", *data(list, (listVal_t) curElemInd), 
-                                                              *next(list, (listVal_t) curElemInd), 
-                                                              *prev(list, (listVal_t) curElemInd));
+                                                            *next(list, (listVal_t) curElemInd), 
+                                                            *prev(list, (listVal_t) curElemInd));
     }
 }
 
@@ -93,14 +93,6 @@ void listGraphDump(list_t* list){
         }
     }
 
-    //Подсветка рамки для зеленого 
-    fprintf(graphFilePtr, "\n");
-    for(listVal_t curCellInd = *head(list); (*prev(list, curCellInd) != *tail(list)) && (*data(list, curCellInd) != LIST_POISON); curCellInd = *next(list, curCellInd)){
-        
-        fprintf(graphFilePtr, "\tnode%d[color = \"%s\", penwidth=4];\n", curCellInd, DIRECT_CHAIN_COLOR);
-
-    }
-
     fprintf(graphFilePtr, "\n\t");
     for(listVal_t curCellInd = *freeInd(list); curCellInd < (listVal_t) list->capacity; curCellInd = *next(list, curCellInd)){
         fprintf(graphFilePtr, "node%d", curCellInd);
@@ -119,13 +111,15 @@ void listGraphDump(list_t* list){
 
     }
 
-    // for(listVal_t curCellInd = *tail(list); (*next(list, curCellInd) != *head(list)) || (*data(list, curCellInd) != LIST_POISON); curCellInd = *prev(list, curCellInd)){
-    //     fprintf(graphFilePtr, "node%d", curCellInd);
-    //     if(curCellInd != *head(list)){
-    //         fprintf(graphFilePtr, " -> ");
-    //     }
-    //         fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000];\n");
-    // }
+    for(listVal_t curCellInd = *tail(list); (*next(list, curCellInd) != *head(list)) || (*data(list, curCellInd) != LIST_POISON); curCellInd = *prev(list, curCellInd)){
+        fprintf(graphFilePtr, "node%d", curCellInd);
+        if(curCellInd != *head(list)){
+            fprintf(graphFilePtr, " -> ");
+        }
+        else{
+            fprintf(graphFilePtr, "[color=\"red\", arrowsize=1.5, penwidth=2, weight=100000];\n");
+        }
+    }
 
     fprintf(graphFilePtr, "\n}");
 
