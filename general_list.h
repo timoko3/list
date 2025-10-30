@@ -1,8 +1,10 @@
-#ifndef AUXILARY_LIST_H
-#define AUXILARY_LIST_H
+#ifndef GENERAL_LIST_H
+#define GENERAL_LIST_H
 
 #include <limits.h>
 #include <stddef.h>
+
+#define log(list1) htmlLog(&list1, __FILE__, __FUNCTION__, __LINE__)
 
 typedef int listVal_t;
 
@@ -33,4 +35,4 @@ listVal_t* head(list_t* list);
 listVal_t* tail(list_t* list);
 listVal_t* freeInd(list_t* list);
 
-#endif /* AUXILARY_LIST_H */
+#endif /* GENERAL_LIST_H */

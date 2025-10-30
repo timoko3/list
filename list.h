@@ -2,7 +2,7 @@
 #define LIST_H
 
 #include "protection_list.h"
-#include "auxilary_list.h"
+#include "general_list.h"
 
 listStatus listCtor(list_t* list);
 listStatus listDtor(list_t* list);

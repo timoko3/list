@@ -1,5 +1,3 @@
-
-#include "auxilary_list.h"
 #include "protection_list.h"
 #include "general/file.h"
 
@@ -8,26 +6,50 @@
 #include <stdlib.h>
 
 const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDump.dot";
+const char* HTML_LOG_FILE_NAME       = "logList.html";
 const listVal_t MAX_NODE_NAME_SIZE      = 20;
 
 const char* DIRECT_CHAIN_COLOR  = "#98FB98";
 const char* REVERSE_CHAIN_COLOR = "#DC143C";
 const char* FREE_CHAIN_COLOR    = "#6A5ACD";
 
-void listDumpBasic(list_t* list){
+void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine){
     assert(list);
+    assert(callFileName);
+    assert(callFuncName);
 
-    printf("listGraphDump:\n");
+    fileDescription logFile = {
+        HTML_LOG_FILE_NAME,
+        "wb"
+    };
+    FILE* logFilePtr = myOpenFile(&logFile);
+    assert(logFilePtr);
 
-    printf("\thead: %d\n", *head(list));
-    printf("\ttail: %d\n", *tail(list));
-    printf("\tcurFreeElem: %d\n", *freeInd(list));    
+    fprintf(logFilePtr, "<pre>\n\n");
 
-    printf("\telements:\n");
+    fprintf(logFilePtr, "<h3> DUMP <font color = red> BEFORE </font> DELETE (9) </h3>\n\n");
+    fprintf(logFilePtr, "In file %s at %s:%d\n", callFileName, callFuncName, callLine);
+
+    fprintf(logFilePtr, "\n\n <img src=%s width=200px>\n", GRAPH_DUMP_DOT_FILE_NAME);
+
+    fclose(logFilePtr);
+}
+
+void listDumpBasic(list_t* list, FILE* stream){
+    assert(list);
+    assert(stream);
+
+    fprintf(stream, "listDump:\n");
+
+    fprintf(stream, "\thead: %d\n",        *head(list));
+    fprintf(stream, "\ttail: %d\n",        *tail(list));
+    fprintf(stream, "\tcurFreeElem: %d\n", *freeInd(list));    
+
+    fprintf(stream, "\telements:\n");
     for(listVal_t curElemInd = 0; curElemInd < (listVal_t) list->capacity; curElemInd++){
-        printf("\t\tdata: %-10d, next: %-3d, prev: %-3d\n", *data(list, (listVal_t) curElemInd), 
-                                                            *next(list, (listVal_t) curElemInd), 
-                                                            *prev(list, (listVal_t) curElemInd));
+        fprintf(stream, "\t\tdata: %-10d, next: %-3d, prev: %-3d\n", *data(list, (listVal_t) curElemInd), 
+                                                                     *next(list, (listVal_t) curElemInd), 
+                                                                     *prev(list, (listVal_t) curElemInd));
     }
 }
 
@@ -54,7 +76,7 @@ void listGraphDump(list_t* list){
             continue;
         }
 
-        fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | *data = %d | {*prev = %d | *next = %d} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
+        fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = %d | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
         
     }
     fprintf(graphFilePtr, "\n");

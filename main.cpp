@@ -2,13 +2,14 @@
 
 #include <stdio.h>
 
+
 int main(void){
     list_t list1;
     list1.capacity = 10;
 
     listCtor(&list1);
 
-    listDumpBasic(&list1);
+    listDumpBasic(&list1, stdout);
 
     listInsertAfter(&list1, 0, 20);
 
@@ -24,9 +25,11 @@ int main(void){
 
     listGraphDump(&list1);
 
-    listDumpBasic(&list1);
+    listDumpBasic(&list1, stdout);
 
-    listDumpBasic(&list1);
+    listDumpBasic(&list1, stdout);
+
+    log(list1);
 
     listDtor(&list1);
 }
