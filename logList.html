@@ -1,6 +1,6 @@
 <pre>
 <h3> DUMP <font color = red> before </font> insertAfter (0) </h3>
-In file list.cpp at listInsertAfter:49
+In file list.cpp at listInsertAfter:50
 dump:
 listDump:
 	capacity: 10
@@ -27,7 +27,7 @@ graphDump:
 ----------------------------------------------------------------------------
 <pre>
 <h3> DUMP <font color = red> after </font> insertAfter (0) </h3>
-In file list.cpp at listInsertAfter:67
+In file list.cpp at listInsertAfter:72
 dump:
 listDump:
 	capacity: 10
@@ -54,7 +54,7 @@ graphDump:
 ----------------------------------------------------------------------------
 <pre>
 <h3> DUMP <font color = red> before </font> insertAfter (1) </h3>
-In file list.cpp at listInsertAfter:49
+In file list.cpp at listInsertAfter:50
 dump:
 listDump:
 	capacity: 10
@@ -81,7 +81,7 @@ graphDump:
 ----------------------------------------------------------------------------
 <pre>
 <h3> DUMP <font color = red> after </font> insertAfter (1) </h3>
-In file list.cpp at listInsertAfter:67
+In file list.cpp at listInsertAfter:72
 dump:
 listDump:
 	capacity: 10
@@ -108,7 +108,7 @@ graphDump:
 ----------------------------------------------------------------------------
 <pre>
 <h3> DUMP <font color = red> before </font> insertAfter (2) </h3>
-In file list.cpp at listInsertAfter:49
+In file list.cpp at listInsertAfter:50
 dump:
 listDump:
 	capacity: 10
@@ -135,7 +135,7 @@ graphDump:
 ----------------------------------------------------------------------------
 <pre>
 <h3> DUMP <font color = red> after </font> insertAfter (2) </h3>
-In file list.cpp at listInsertAfter:67
+In file list.cpp at listInsertAfter:72
 dump:
 listDump:
 	capacity: 10
@@ -161,9 +161,8 @@ graphDump:
 
 ----------------------------------------------------------------------------
 <pre>
-<h3> DUMP <font color = red> error </font> verification (-1) </h3>
-<font color = red>prev или next имеют значение не принадлежащее списку
-</font>In file list.cpp at listInsertAfter:48
+<h3> DUMP <font color = red> before </font> insertAfter (3) </h3>
+In file list.cpp at listInsertAfter:50
 dump:
 listDump:
 	capacity: 10
@@ -174,7 +173,7 @@ listDump:
 	elements:
 		data: 2147483647, next: 1  , prev: 3  
 		data: 10        , next: 2  , prev: 0  
-		data: 20        , next: 300, prev: 1  
+		data: 20        , next: 3  , prev: 1  
 		data: 30        , next: 0  , prev: 2  
 		data: 2147483647, next: 5  , prev: 3  
 		data: 2147483647, next: 6  , prev: 4  
@@ -189,22 +188,21 @@ graphDump:
 
 ----------------------------------------------------------------------------
 <pre>
-<h3> DUMP <font color = red> error </font> verification (-1) </h3>
-<font color = red>prev или next имеют значение не принадлежащее списку
-</font>In file list.cpp at listDelete:100
+<h3> DUMP <font color = red> after </font> insertAfter (3) </h3>
+In file list.cpp at listInsertAfter:72
 dump:
 listDump:
 	capacity: 10
-	size: 3
+	size: 4
 	head: 1
-	tail: 3
-	curFreeElem: 4
+	tail: 4
+	curFreeElem: 5
 	elements:
-		data: 2147483647, next: 1  , prev: 3  
+		data: 2147483647, next: 1  , prev: 4  
 		data: 10        , next: 2  , prev: 0  
-		data: 20        , next: 300, prev: 1  
-		data: 30        , next: 0  , prev: 2  
-		data: 2147483647, next: 5  , prev: 3  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 0  , prev: 3  
 		data: 2147483647, next: 6  , prev: 4  
 		data: 2147483647, next: 7  , prev: 5  
 		data: 2147483647, next: 8  , prev: 6  
@@ -214,5 +212,1091 @@ graphDump:
 
 
  <img src=graphDumps/graph8.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (4) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 10
+	size: 4
+	head: 1
+	tail: 4
+	curFreeElem: 5
+	elements:
+		data: 2147483647, next: 1  , prev: 4  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 0  , prev: 3  
+		data: 2147483647, next: 6  , prev: 4  
+		data: 2147483647, next: 7  , prev: 5  
+		data: 2147483647, next: 8  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph9.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (4) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 10
+	size: 5
+	head: 1
+	tail: 5
+	curFreeElem: 6
+	elements:
+		data: 2147483647, next: 1  , prev: 5  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 0  , prev: 4  
+		data: 2147483647, next: 7  , prev: 5  
+		data: 2147483647, next: 8  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph10.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (5) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 10
+	size: 5
+	head: 1
+	tail: 5
+	curFreeElem: 6
+	elements:
+		data: 2147483647, next: 1  , prev: 5  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 0  , prev: 4  
+		data: 2147483647, next: 7  , prev: 5  
+		data: 2147483647, next: 8  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph11.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (5) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 10
+	size: 6
+	head: 1
+	tail: 6
+	curFreeElem: 7
+	elements:
+		data: 2147483647, next: 1  , prev: 6  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 0  , prev: 5  
+		data: 2147483647, next: 8  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph12.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (6) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 10
+	size: 6
+	head: 1
+	tail: 6
+	curFreeElem: 7
+	elements:
+		data: 2147483647, next: 1  , prev: 6  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 0  , prev: 5  
+		data: 2147483647, next: 8  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph13.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (6) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 10
+	size: 7
+	head: 1
+	tail: 7
+	curFreeElem: 8
+	elements:
+		data: 2147483647, next: 1  , prev: 7  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 0  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph14.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (7) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 10
+	size: 7
+	head: 1
+	tail: 7
+	curFreeElem: 8
+	elements:
+		data: 2147483647, next: 1  , prev: 7  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 0  , prev: 6  
+		data: 2147483647, next: 9  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph15.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (7) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 10
+	size: 8
+	head: 1
+	tail: 8
+	curFreeElem: 9
+	elements:
+		data: 2147483647, next: 1  , prev: 8  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 0  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph16.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (8) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 10
+	size: 8
+	head: 1
+	tail: 8
+	curFreeElem: 9
+	elements:
+		data: 2147483647, next: 1  , prev: 8  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 0  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph17.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> reallocation (0) </h3>
+In file list.cpp at realocateListMem:160
+dump:
+listDump:
+	capacity: 10
+	size: 8
+	head: 1
+	tail: 8
+	curFreeElem: 9
+	elements:
+		data: 2147483647, next: 1  , prev: 8  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 0  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+graphDump:
+
+
+ <img src=graphDumps/graph18.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> reallocation (1) </h3>
+In file list.cpp at realocateListMem:178
+dump:
+listDump:
+	capacity: 20
+	size: 8
+	head: 1
+	tail: 8
+	curFreeElem: 9
+	elements:
+		data: 2147483647, next: 1  , prev: 8  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 0  , prev: 7  
+		data: 2147483647, next: 10 , prev: 8  
+		data: 2147483647, next: 11 , prev: 9  
+		data: 2147483647, next: 12 , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph19.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (8) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 9
+	head: 1
+	tail: 9
+	curFreeElem: 10
+	elements:
+		data: 2147483647, next: 1  , prev: 9  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 0  , prev: 8  
+		data: 2147483647, next: 11 , prev: 9  
+		data: 2147483647, next: 12 , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph20.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (9) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 9
+	head: 1
+	tail: 9
+	curFreeElem: 10
+	elements:
+		data: 2147483647, next: 1  , prev: 9  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 0  , prev: 8  
+		data: 2147483647, next: 11 , prev: 9  
+		data: 2147483647, next: 12 , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph21.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (9) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 10
+	head: 1
+	tail: 10
+	curFreeElem: 11
+	elements:
+		data: 2147483647, next: 1  , prev: 10 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 0  , prev: 9  
+		data: 2147483647, next: 12 , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph22.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (10) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 10
+	head: 1
+	tail: 10
+	curFreeElem: 11
+	elements:
+		data: 2147483647, next: 1  , prev: 10 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 0  , prev: 9  
+		data: 2147483647, next: 12 , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph23.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (10) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 11
+	head: 1
+	tail: 11
+	curFreeElem: 12
+	elements:
+		data: 2147483647, next: 1  , prev: 11 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 0  , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph24.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (11) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 11
+	head: 1
+	tail: 11
+	curFreeElem: 12
+	elements:
+		data: 2147483647, next: 1  , prev: 11 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 0  , prev: 10 
+		data: 2147483647, next: 13 , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph25.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (11) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 12
+	head: 1
+	tail: 12
+	curFreeElem: 13
+	elements:
+		data: 2147483647, next: 1  , prev: 12 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 0  , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph26.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (12) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 12
+	head: 1
+	tail: 12
+	curFreeElem: 13
+	elements:
+		data: 2147483647, next: 1  , prev: 12 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 0  , prev: 11 
+		data: 2147483647, next: 14 , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph27.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (12) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 13
+	head: 1
+	tail: 13
+	curFreeElem: 14
+	elements:
+		data: 2147483647, next: 1  , prev: 13 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 0  , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph28.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (13) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 13
+	head: 1
+	tail: 13
+	curFreeElem: 14
+	elements:
+		data: 2147483647, next: 1  , prev: 13 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 0  , prev: 12 
+		data: 2147483647, next: 15 , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph29.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (13) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 14
+	head: 1
+	tail: 14
+	curFreeElem: 15
+	elements:
+		data: 2147483647, next: 1  , prev: 14 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 0  , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph30.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (14) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 14
+	head: 1
+	tail: 14
+	curFreeElem: 15
+	elements:
+		data: 2147483647, next: 1  , prev: 14 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 0  , prev: 13 
+		data: 2147483647, next: 16 , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph31.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (14) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 15
+	head: 1
+	tail: 15
+	curFreeElem: 16
+	elements:
+		data: 2147483647, next: 1  , prev: 15 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 0  , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph32.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (15) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 15
+	head: 1
+	tail: 15
+	curFreeElem: 16
+	elements:
+		data: 2147483647, next: 1  , prev: 15 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 0  , prev: 14 
+		data: 2147483647, next: 17 , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph33.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (15) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 16
+	head: 1
+	tail: 16
+	curFreeElem: 17
+	elements:
+		data: 2147483647, next: 1  , prev: 16 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 0  , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph34.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (16) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 16
+	head: 1
+	tail: 16
+	curFreeElem: 17
+	elements:
+		data: 2147483647, next: 1  , prev: 16 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 0  , prev: 15 
+		data: 2147483647, next: 18 , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph35.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (16) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 17
+	head: 1
+	tail: 17
+	curFreeElem: 18
+	elements:
+		data: 2147483647, next: 1  , prev: 17 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 17 , prev: 15 
+		data: 20        , next: 0  , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph36.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> before </font> insertAfter (17) </h3>
+In file list.cpp at listInsertAfter:50
+dump:
+listDump:
+	capacity: 20
+	size: 17
+	head: 1
+	tail: 17
+	curFreeElem: 18
+	elements:
+		data: 2147483647, next: 1  , prev: 17 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 17 , prev: 15 
+		data: 20        , next: 0  , prev: 16 
+		data: 2147483647, next: 19 , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph37.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> after </font> insertAfter (17) </h3>
+In file list.cpp at listInsertAfter:72
+dump:
+listDump:
+	capacity: 20
+	size: 18
+	head: 1
+	tail: 18
+	curFreeElem: 19
+	elements:
+		data: 2147483647, next: 1  , prev: 18 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 3  , prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 17 , prev: 15 
+		data: 20        , next: 18 , prev: 16 
+		data: 30        , next: 0  , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph38.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> error </font> verification (-1) </h3>
+<font color = red>prev или next имеют значение не принадлежащее списку
+</font>In file list.cpp at listInsertAfter:49
+dump:
+listDump:
+	capacity: 20
+	size: 18
+	head: 1
+	tail: 18
+	curFreeElem: 19
+	elements:
+		data: 2147483647, next: 1  , prev: 18 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 300, prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 17 , prev: 15 
+		data: 20        , next: 18 , prev: 16 
+		data: 30        , next: 0  , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph39.png style="width: 85%; height: auto;">
+
+----------------------------------------------------------------------------
+<pre>
+<h3> DUMP <font color = red> error </font> verification (-1) </h3>
+<font color = red>prev или next имеют значение не принадлежащее списку
+</font>In file list.cpp at listDelete:105
+dump:
+listDump:
+	capacity: 20
+	size: 18
+	head: 1
+	tail: 18
+	curFreeElem: 19
+	elements:
+		data: 2147483647, next: 1  , prev: 18 
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 300, prev: 1  
+		data: 30        , next: 4  , prev: 2  
+		data: 10        , next: 5  , prev: 3  
+		data: 20        , next: 6  , prev: 4  
+		data: 30        , next: 7  , prev: 5  
+		data: 10        , next: 8  , prev: 6  
+		data: 20        , next: 9  , prev: 7  
+		data: 30        , next: 10 , prev: 8  
+		data: 10        , next: 11 , prev: 9  
+		data: 20        , next: 12 , prev: 10 
+		data: 30        , next: 13 , prev: 11 
+		data: 10        , next: 14 , prev: 12 
+		data: 20        , next: 15 , prev: 13 
+		data: 30        , next: 16 , prev: 14 
+		data: 10        , next: 17 , prev: 15 
+		data: 20        , next: 18 , prev: 16 
+		data: 30        , next: 0  , prev: 17 
+		data: 2147483647, next: 20 , prev: 18 
+graphDump:
+
+
+ <img src=graphDumps/graph40.png style="width: 85%; height: auto;">
 
 ----------------------------------------------------------------------------

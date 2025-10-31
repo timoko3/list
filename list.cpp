@@ -9,7 +9,8 @@
 
 #define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
 
-static listStatus listInit(list_t* list);
+static listStatus listInit(list_t* list, size_t startIndex = 1);
+static listStatus realocateListMem(list_t* list);
 
 listStatus listCtor(list_t* list){
     assert(list);
@@ -48,6 +49,10 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
     verify(list);
     log(list, "before", "insertAfter", insIndex);
     
+    if((list->capacity - list->size) <= 2){
+        realocateListMem(list);
+    }
+
     *data(list, *freeInd(list)) = insValue;
     listVal_t insertedCellPhysInd = *freeInd(list);
     *freeInd(list) = *next(list, *freeInd(list));
@@ -123,19 +128,54 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
     return PROCESS_OK;
 }
 
-static listStatus listInit(list_t* list){
+static listStatus listInit(list_t* list, size_t startIndex){
     assert(list);
 
-    for(size_t fillInd = 1; fillInd < list->capacity; fillInd++){
+    static size_t initCount = 0;
+
+    for(size_t fillInd = startIndex; fillInd < list->capacity; fillInd++){
         *data(list, (listVal_t) fillInd) = LIST_POISON;
         *next(list, (listVal_t) fillInd) = (listVal_t) fillInd + 1;
         *prev(list, (listVal_t) fillInd) = (listVal_t) fillInd - 1;
     }
 
-    *data(list, 0) = LIST_POISON;
-    *head(list) = 0;
-    *tail(list) = 0;
+    if(initCount == 0){
+        *data(list, 0) = LIST_POISON;
+        *head(list) = 0;
+        *tail(list) = 0;
+    }
+
+    initCount++;
 
     return PROCESS_OK;
 }
 
+
+static listStatus realocateListMem(list_t* list){
+    assert(list);
+
+    static size_t reallocationCount = 0;
+
+    verify(list);
+    log(list, "before", "reallocation", reallocationCount);
+
+    printf("difference: %lu\n", list->capacity - list->size);
+
+    size_t initStartIndex = list->capacity;
+
+    list->capacity = list->capacity * 2;
+    listElem_t* temp = (listElem_t*) realloc(list->elem, list->capacity * sizeof(listElem_t));
+    assert(temp);
+
+    list->elem = temp;
+
+    
+    listInit(list, initStartIndex);
+    
+    reallocationCount++;
+
+    verify(list);
+    log(list, "after", "reallocation", reallocationCount);
+
+    return PROCESS_OK;
+}
