@@ -9,19 +9,11 @@ int main(void){
 
     listCtor(&list1);
 
-    listInsertAfter(&list1, 0, 20);
+    listInsertToTail(&list1, 10);
+    listInsertToTail(&list1, 20);
+    listInsertToTail(&list1, 30);
 
-    listInsertAfter(&list1, 0, 30);
-
-    listInsertAfter(&list1, 0, 40);
-
-    listInsertAfter(&list1, 0, 50);
-
-    listInsertAfter(&list1, 0, 60);
-
-    listDelete(&list1, 1);
-
-    listInsertAfter(&list1, 3, 1000);
+    listDelete(&list1, 2);
 
     listDtor(&list1);
 }

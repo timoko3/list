@@ -21,7 +21,9 @@ static size_t logCount   = 0;
 
 static void assignErrorStruct(list_t* list, listStatus type);
 
-listStatus verifyStack(list_t* list, const char* function, const char* file, const int line){
+static bool connectivityCheck(list_t* list);
+
+listStatus verifyList(list_t* list, const char* function, const char* file, const int line){
     if(list == NULL){
         printf("list — нулевой указатель\n");  
     } 
@@ -30,10 +32,6 @@ listStatus verifyStack(list_t* list, const char* function, const char* file, con
             assignErrorStruct(list, NULL_POINTER);
             printf("data — нулевой указатель\n");
         }
-
-        // else if(stk->capacity > (size_t) STACK_MAX_CAPACITY){
-        //     assignErrorStruct(stk, CAPACITY_EXCEEDS_LIMIT);
-        // }
         else if(list->capacity == 0){
             assignErrorStruct(list, CAPACITY_IS_ZERO);
         }
@@ -42,6 +40,10 @@ listStatus verifyStack(list_t* list, const char* function, const char* file, con
         }
         else if(malloc_usable_size(list->elem) != (sizeof(listElem_t) * list->capacity)){
             assignErrorStruct(list, BAD_MEMORY_ALLOCATION);
+        }
+
+        else if(!connectivityCheck(list)){
+            assignErrorStruct(list, LIST_NOT_CONNECTED);
         }
 
         else{
@@ -62,6 +64,20 @@ static void assignErrorStruct(list_t* list, listStatus type){
             list->status = listStatuses[curErrInd];
         }
     }
+}
+
+static bool connectivityCheck(list_t* list){
+    assert(list);
+
+    size_t connectionsCount = 0;
+    for(listVal_t curCellInd = *head(list); (*prev(list, curCellInd) != *tail(list)) && (*data(list, curCellInd) != LIST_POISON); curCellInd = *next(list, curCellInd)){
+        connectionsCount++;
+    }
+    if(connectionsCount != list->size){
+        return false;
+    }
+    fprintf(stdout, "connectionsCount: %lu, size: %lu\n", connectionsCount, list->size);
+    return true;
 }
 
 void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine, 
@@ -88,10 +104,21 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     FILE* logFilePtr = myOpenFile(&logFile);
     assert(logFilePtr);
     $
+
+    if(parameter == -1){
+
+    }
+
     fprintf(logFilePtr, "<pre>\n");
 
     fprintf(logFilePtr, "<h3> DUMP <font color = red> %s </font> %s (%d) </h3>\n", callCase, actionName, parameter);
+
+    if(parameter == -1){
+        fprintf(logFilePtr, "<font color = red>%s</font>", list->status.text);
+    }
+
     fprintf(logFilePtr, "In file %s at %s:%d\n", callFileName, callFuncName, callLine);
+
 
     fprintf(logFilePtr, "dump:\n");
 
@@ -101,7 +128,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     $
     listGraphDump(list);
     $
-    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%d.png style=\"width: 85%%; height: auto;\">\n", logCount);
+    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%lu.png style=\"width: 85%%; height: auto;\">\n", logCount);
 
     fprintf(logFilePtr, "\n----------------------------------------------------------------------------\n");
 

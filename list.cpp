@@ -7,6 +7,8 @@
 #include <malloc.h>
 #include <assert.h>
 
+#define verify(list) verifyList(list, __FUNCTION__, __FILE__, __LINE__)
+
 static listStatus listInit(list_t* list);
 
 listStatus listCtor(list_t* list){
@@ -43,6 +45,7 @@ listStatus listDtor(list_t* list){
 listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue){
     assert(list);
 
+    verify(list);
     log(list, "before", "insertAfter", insIndex);
     
     *data(list, *freeInd(list)) = insValue;
@@ -60,6 +63,7 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
 
     (list->size)++;
 
+    verify(list);
     log(list, "after", "insertAfter", insIndex);
 
     return PROCESS_OK;
@@ -67,7 +71,6 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
 
 listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue){
     assert(list);
-
 
     insIndex = *prev(list, insIndex);
     listInsertAfter(list, insIndex, insValue);
@@ -78,12 +81,12 @@ listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue
 listStatus listInsertToTail(list_t* list, listVal_t insValue){
     assert(list);
     
-    listInsertAfter(list, 0, insValue);
+    listInsertBefore(list, 0, insValue);
 
     return PROCESS_OK;
 }
 
-listStatus listInsertToTail(list_t* list, listVal_t insValue){
+listStatus listInsertToHead(list_t* list, listVal_t insValue){
     assert(list);
     
     listInsertAfter(list, 0, insValue);
@@ -94,6 +97,7 @@ listStatus listInsertToTail(list_t* list, listVal_t insValue){
 listStatus listDelete(list_t* list, listVal_t deleteIndex){
     assert(list);
 
+    verify(list);
     log(list, "before", "delete", deleteIndex);
 
     if(deleteIndex     == *tail(list)){
@@ -113,6 +117,7 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     (list->size)--;
 
+    verify(list);
     log(list, "after", "delete", deleteIndex);
 
     return PROCESS_OK;

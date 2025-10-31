@@ -9,6 +9,7 @@ listStatus listDtor(list_t* list);
 
 listStatus listInsertAfter(list_t* list, listVal_t index, listVal_t insValue);
 listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue);
+listStatus listInsertToHead(list_t* list, listVal_t insValue);
 listStatus listInsertToTail(list_t* list, listVal_t insValue);
 listStatus listDelete(list_t* list, listVal_t index);
 

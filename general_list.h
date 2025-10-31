@@ -17,6 +17,7 @@ enum listStatus{
     BAD_MEMORY_ALLOCATION,
     CAPACITY_IS_ZERO,
     SIZE_EXCEEDS_CAPACITY,
+    LIST_NOT_CONNECTED
 };
 
 struct listStatusDescription{
@@ -30,11 +31,8 @@ static struct listStatusDescription listStatuses[]{
     {NULL_POINTER,                  "Указатели не должны быть нулевыми\n"},
     {CAPACITY_IS_ZERO,              "Capacity равно 0\n"}, 
     {BAD_MEMORY_ALLOCATION,         "Некорректное выделение памяти\n"},
-    {SIZE_EXCEEDS_CAPACITY,         "Размер стека превышает объем выделяемой памяти\n"}
-    // {CANARY_TORTURE,                "Канарейка была замучена до смерти\n"},
-    // {EMPTY_STACK,                   "Стэк опустел и получение элемента не возможно\n"}, 
-    // {UNPLANNED_STACK_CHANGE,        "Стек несакнкционированно изменен извне\n"},
-    // {UNPLANNED_STACK_STRUCT_CHANGE, "Структура стека несанкционированно изменена\n"}
+    {SIZE_EXCEEDS_CAPACITY,         "Размер стека превышает объем выделяемой памяти\n"},
+    {LIST_NOT_CONNECTED,            "Список не соединен или соединен не верно\n"}
 };
 
 struct listElem_t{
