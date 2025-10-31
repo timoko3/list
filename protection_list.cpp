@@ -5,32 +5,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDump.dot";
+const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
 const char* HTML_LOG_FILE_NAME       = "logList.html";
-const listVal_t MAX_NODE_NAME_SIZE      = 20;
+const listVal_t MAX_NODE_NAME_SIZE   = 20;
+const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng graphDumps/graphDump.dot -o graphDumps/graph%d.png";
+const size_t CONVERSION_COMMAND_SIZE = 61;
 
 const char* DIRECT_CHAIN_COLOR  = "#98FB98";
 const char* REVERSE_CHAIN_COLOR = "#DC143C";
 const char* FREE_CHAIN_COLOR    = "#6A5ACD";
 
-void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine){
+static size_t logCount   = 0;
+
+void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine, 
+                           const char* callCase, const char* actionName, listVal_t parameter){
     assert(list);
     assert(callFileName);
     assert(callFuncName);
 
-    fileDescription logFile = {
-        HTML_LOG_FILE_NAME,
-        "wb"
-    };
+
+    fileDescription logFile = {};
+    if(logCount == 0){
+        logFile = {
+            HTML_LOG_FILE_NAME,
+            "wb"
+        };
+    }
+    else{
+        logFile = {
+            HTML_LOG_FILE_NAME,
+            "ab"
+        };
+    }
+
     FILE* logFilePtr = myOpenFile(&logFile);
     assert(logFilePtr);
 
-    fprintf(logFilePtr, "<pre>\n\n");
+    fprintf(logFilePtr, "<pre>\n");
 
-    fprintf(logFilePtr, "<h3> DUMP <font color = red> BEFORE </font> DELETE (9) </h3>\n\n");
+    fprintf(logFilePtr, "<h3> DUMP <font color = red> %s </font> %s (%d) </h3>\n", callCase, actionName, parameter);
     fprintf(logFilePtr, "In file %s at %s:%d\n", callFileName, callFuncName, callLine);
 
-    fprintf(logFilePtr, "\n\n <img src=%s width=200px>\n", GRAPH_DUMP_DOT_FILE_NAME);
+    fprintf(logFilePtr, "dump:\n");
+
+    listDumpBasic(list, logFilePtr);
+
+    fprintf(logFilePtr, "graphDump:\n");
+
+    listGraphDump(list);
+
+    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%d.png style=\"width: 85%%; height: auto;\">\n", logCount);
+
+    fprintf(logFilePtr, "\n----------------------------------------------------------------------------\n");
 
     fclose(logFilePtr);
 }
@@ -55,6 +81,8 @@ void listDumpBasic(list_t* list, FILE* stream){
 
 void listGraphDump(list_t* list){
     assert(list);
+
+    logCount++;    
 
     fileDescription graphDump = {
         GRAPH_DUMP_DOT_FILE_NAME,
@@ -147,5 +175,10 @@ void listGraphDump(list_t* list){
 
     fclose(graphFilePtr);
     
-    system("dot -Tpng graphDump.dot -o graph.png");
+    
+    char convertToImageCommandString[CONVERSION_COMMAND_SIZE];
+
+    sprintf(convertToImageCommandString, CONVERT_TO_IMAGE_COMMAND, logCount);   
+
+    system((const char*) convertToImageCommandString);
 }

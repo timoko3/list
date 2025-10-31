@@ -9,8 +9,6 @@ int main(void){
 
     listCtor(&list1);
 
-    listDumpBasic(&list1, stdout);
-
     listInsertAfter(&list1, 0, 20);
 
     listInsertAfter(&list1, 0, 30);
@@ -22,14 +20,6 @@ int main(void){
     listInsertAfter(&list1, 0, 60);
 
     listInsertAfter(&list1, 2, 1000);
-
-    listGraphDump(&list1);
-
-    listDumpBasic(&list1, stdout);
-
-    listDumpBasic(&list1, stdout);
-
-    log(list1);
 
     listDtor(&list1);
 }

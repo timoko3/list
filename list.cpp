@@ -43,6 +43,8 @@ listStatus listDtor(list_t* list){
 
 listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue){
     assert(list);
+
+    log(list, "before", "insertAfter", insIndex);
     
     *data(list, *freeInd(list)) = insValue;
     listVal_t insertedCellPhysInd = *freeInd(list);

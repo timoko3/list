@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <stddef.h>
 
-#define log(list1) htmlLog(&list1, __FILE__, __FUNCTION__, __LINE__)
+#define log(list1, callCase, actionName, parameter) htmlLog(list1, __FILE__, __FUNCTION__, __LINE__, callCase, actionName, parameter)
 
 typedef int listVal_t;
 
