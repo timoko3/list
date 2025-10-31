@@ -7,7 +7,7 @@
 #include <malloc.h>
 #include <assert.h>
 
-#define verify(list) verifyList(list, __FUNCTION__, __FILE__, __LINE__)
+#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
 
 static listStatus listInit(list_t* list);
 

@@ -161,8 +161,9 @@ graphDump:
 
 ----------------------------------------------------------------------------
 <pre>
-<h3> DUMP <font color = red> before </font> delete (2) </h3>
-In file list.cpp at listDelete:101
+<h3> DUMP <font color = red> error </font> verification (-1) </h3>
+<font color = red>prev или next имеют значение не принадлежащее списку
+</font>In file list.cpp at listInsertAfter:48
 dump:
 listDump:
 	capacity: 10
@@ -173,7 +174,7 @@ listDump:
 	elements:
 		data: 2147483647, next: 1  , prev: 3  
 		data: 10        , next: 2  , prev: 0  
-		data: 20        , next: 3  , prev: 1  
+		data: 20        , next: 300, prev: 1  
 		data: 30        , next: 0  , prev: 2  
 		data: 2147483647, next: 5  , prev: 3  
 		data: 2147483647, next: 6  , prev: 4  
@@ -188,20 +189,21 @@ graphDump:
 
 ----------------------------------------------------------------------------
 <pre>
-<h3> DUMP <font color = red> after </font> delete (2) </h3>
-In file list.cpp at listDelete:121
+<h3> DUMP <font color = red> error </font> verification (-1) </h3>
+<font color = red>prev или next имеют значение не принадлежащее списку
+</font>In file list.cpp at listDelete:100
 dump:
 listDump:
 	capacity: 10
-	size: 2
+	size: 3
 	head: 1
 	tail: 3
-	curFreeElem: 2
+	curFreeElem: 4
 	elements:
 		data: 2147483647, next: 1  , prev: 3  
-		data: 10        , next: 3  , prev: 0  
-		data: 2147483647, next: 4  , prev: 3  
-		data: 30        , next: 2  , prev: 1  
+		data: 10        , next: 2  , prev: 0  
+		data: 20        , next: 300, prev: 1  
+		data: 30        , next: 0  , prev: 2  
 		data: 2147483647, next: 5  , prev: 3  
 		data: 2147483647, next: 6  , prev: 4  
 		data: 2147483647, next: 7  , prev: 5  

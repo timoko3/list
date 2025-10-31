@@ -17,6 +17,7 @@ enum listStatus{
     BAD_MEMORY_ALLOCATION,
     CAPACITY_IS_ZERO,
     SIZE_EXCEEDS_CAPACITY,
+    NON_VALID_INDEXES,
     LIST_NOT_CONNECTED
 };
 
@@ -32,6 +33,7 @@ static struct listStatusDescription listStatuses[]{
     {CAPACITY_IS_ZERO,              "Capacity равно 0\n"}, 
     {BAD_MEMORY_ALLOCATION,         "Некорректное выделение памяти\n"},
     {SIZE_EXCEEDS_CAPACITY,         "Размер стека превышает объем выделяемой памяти\n"},
+    {NON_VALID_INDEXES,             "prev или next имеют значение не принадлежащее списку\n"},
     {LIST_NOT_CONNECTED,            "Список не соединен или соединен не верно\n"}
 };
 
