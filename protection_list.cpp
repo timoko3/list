@@ -1,5 +1,6 @@
 #include "protection_list.h"
 #include "general/file.h"
+#include "general/debug.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -37,10 +38,10 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
             "ab"
         };
     }
-
+    $
     FILE* logFilePtr = myOpenFile(&logFile);
     assert(logFilePtr);
-
+    $
     fprintf(logFilePtr, "<pre>\n");
 
     fprintf(logFilePtr, "<h3> DUMP <font color = red> %s </font> %s (%d) </h3>\n", callCase, actionName, parameter);
@@ -51,9 +52,9 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     listDumpBasic(list, logFilePtr);
 
     fprintf(logFilePtr, "graphDump:\n");
-
+    $
     listGraphDump(list);
-
+    $
     fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%d.png style=\"width: 85%%; height: auto;\">\n", logCount);
 
     fprintf(logFilePtr, "\n----------------------------------------------------------------------------\n");
@@ -83,14 +84,14 @@ void listGraphDump(list_t* list){
     assert(list);
 
     logCount++;    
-
+    $
     fileDescription graphDump = {
         GRAPH_DUMP_DOT_FILE_NAME,
         "wb"
     };
     FILE* graphFilePtr = myOpenFile(&graphDump);
     assert(graphFilePtr);
-    
+    $
     fprintf(graphFilePtr, "digraph G {\n");
     fprintf(graphFilePtr, "rankdir=LR\n");
     fprintf(graphFilePtr, "bgcolor=\"transparent\"\n");

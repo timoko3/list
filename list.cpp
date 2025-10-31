@@ -2,11 +2,10 @@
 #include "general_list.h"
 #include "general/file.h"
 #include "general/poison.h"
+#include "general/debug.h"
 
 #include <malloc.h>
 #include <assert.h>
-
-#define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
 
 static listStatus listInit(list_t* list);
 
@@ -64,6 +63,24 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
     return PROCESS_OK;
 }
 
+listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue){
+    assert(list);
+
+
+    insIndex = *prev(list, insIndex);
+    listInsertAfter(list, insIndex, insValue);
+
+    return PROCESS_OK;
+}
+
+listStatus listInsertToTail(list_t* list, listVal_t insValue){
+    assert(list);
+    
+    listInsertAfter(list, 0, insValue);
+
+    return PROCESS_OK;
+}
+
 listStatus listDelete(list_t* list, listVal_t deleteIndex){
     assert(list);
 
@@ -71,10 +88,6 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     if(deleteIndex     == *tail(list)){
         *tail(list) = *prev(list, deleteIndex);
-    }
-    else if(deleteIndex == *head(list)){
-        *head(list) = *next(list, deleteIndex);
-        *prev(list, *head(list)) = 0;
     }
     else{
         *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);

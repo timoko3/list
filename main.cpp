@@ -19,9 +19,9 @@ int main(void){
 
     listInsertAfter(&list1, 0, 60);
 
-    listDelete(&list1, 5);
+    listDelete(&list1, 1);
 
-    listInsertAfter(&list1, 2, 1000);
+    listInsertAfter(&list1, 3, 1000);
 
     listDtor(&list1);
 }
