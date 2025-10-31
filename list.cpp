@@ -59,11 +59,15 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
     *next(list, *tail(list)) = *freeInd(list);
     *prev(list, *freeInd(list)) = *tail(list);
 
+    log(list, "after", "insertAfter", insIndex);
+
     return PROCESS_OK;
 }
 
 listStatus listDelete(list_t* list, listVal_t deleteIndex){
     assert(list);
+
+    log(list, "before", "delete", deleteIndex);
 
     if(deleteIndex     == *tail(list)){
         *tail(list) = *prev(list, deleteIndex);
@@ -83,6 +87,8 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     *freeInd(list) = deleteIndex;
     *next(list, *tail(list)) = *freeInd(list);
+
+    log(list, "after", "delete", deleteIndex);
 
     return PROCESS_OK;
 }
