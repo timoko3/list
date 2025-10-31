@@ -6,7 +6,7 @@ bgcolor="transparent"
 edge [color="#2d714f", arrowsize=1, penwidth=5, arrowhead="vee", style="bold"];
 node0 [label="head = 5 | tail = 2 | free_tail = 6", shape=record, style="filled", fillcolor="#222222", fontcolor="yellow", color="yellow", penwidth=2];
 	node1 [label="phys idx = 1 | data = 1000 | {prev = 3 | next = 2} "];
-	node2 [label="phys idx = 2 | data = 30 | {prev = 1 | next = 6} "];
+	node2 [label="phys idx = 2 | data = 30 | {prev = 1 | next = 0} "];
 	node3 [label="phys idx = 3 | data = 40 | {prev = 4 | next = 1} "];
 	node4 [label="phys idx = 4 | data = 50 | {prev = 5 | next = 3} "];
 	node5 [label="phys idx = 5 | data = 60 | {prev = 0 | next = 4} "];

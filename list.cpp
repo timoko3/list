@@ -21,7 +21,7 @@ listStatus listCtor(list_t* list){
     
     listInit(list);
     
-    list->status = PROCESS_OK;
+    list->status.type = PROCESS_OK;
     return PROCESS_OK;
 }
 
@@ -55,8 +55,10 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
     *prev(list, *next(list, insIndex)) = insertedCellPhysInd;
     *next(list, insIndex) = insertedCellPhysInd;
 
-    *next(list, *tail(list)) = *freeInd(list);
+    *next(list, *tail(list)) = 0;
     *prev(list, *freeInd(list)) = *tail(list);
+
+    (list->size)++;
 
     log(list, "after", "insertAfter", insIndex);
 
@@ -69,6 +71,14 @@ listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue
 
     insIndex = *prev(list, insIndex);
     listInsertAfter(list, insIndex, insValue);
+
+    return PROCESS_OK;
+}
+
+listStatus listInsertToTail(list_t* list, listVal_t insValue){
+    assert(list);
+    
+    listInsertAfter(list, 0, insValue);
 
     return PROCESS_OK;
 }
@@ -100,6 +110,8 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     *freeInd(list) = deleteIndex;
     *next(list, *tail(list)) = *freeInd(list);
+
+    (list->size)--;
 
     log(list, "after", "delete", deleteIndex);
 

@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 
+listStatus verifyStack(list_t* list, const char* function, const char* file, const int line);
+
 void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine,
                            const char* callCase, const char* actionName, listVal_t parameter);
 void listDumpBasic(list_t* list, FILE* stream);

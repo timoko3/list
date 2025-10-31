@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
 const char* HTML_LOG_FILE_NAME       = "logList.html";
@@ -17,6 +18,51 @@ const char* REVERSE_CHAIN_COLOR = "#DC143C";
 const char* FREE_CHAIN_COLOR    = "#6A5ACD";
 
 static size_t logCount   = 0;
+
+static void assignErrorStruct(list_t* list, listStatus type);
+
+listStatus verifyStack(list_t* list, const char* function, const char* file, const int line){
+    if(list == NULL){
+        printf("list — нулевой указатель\n");  
+    } 
+    else{
+        if(list->elem == NULL){  
+            assignErrorStruct(list, NULL_POINTER);
+            printf("data — нулевой указатель\n");
+        }
+
+        // else if(stk->capacity > (size_t) STACK_MAX_CAPACITY){
+        //     assignErrorStruct(stk, CAPACITY_EXCEEDS_LIMIT);
+        // }
+        else if(list->capacity == 0){
+            assignErrorStruct(list, CAPACITY_IS_ZERO);
+        }
+        else if(list->size > list->capacity){
+            assignErrorStruct(list, SIZE_EXCEEDS_CAPACITY);
+        }
+        else if(malloc_usable_size(list->elem) != (sizeof(listElem_t) * list->capacity)){
+            assignErrorStruct(list, BAD_MEMORY_ALLOCATION);
+        }
+
+        else{
+            assignErrorStruct(list, PROCESS_OK);
+            return PROCESS_OK;
+        }
+    }
+    
+    htmlLog(list, file, function, line, "error", "verification", -1);
+    return list->status.type;
+}
+
+static void assignErrorStruct(list_t* list, listStatus type){
+    assert(list);
+
+    for(size_t curErrInd = 0; curErrInd < sizeof(listStatuses) / sizeof(listStatusDescription); curErrInd++){
+        if(listStatuses[curErrInd].type == type){
+            list->status = listStatuses[curErrInd];
+        }
+    }
+}
 
 void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine, 
                            const char* callCase, const char* actionName, listVal_t parameter){
@@ -67,6 +113,10 @@ void listDumpBasic(list_t* list, FILE* stream){
     assert(stream);
 
     fprintf(stream, "listDump:\n");
+
+    fprintf(stream, "\tcapacity: %lu\n", list->capacity);
+    fprintf(stream, "\tsize: %lu\n",     list->size);
+    
 
     fprintf(stream, "\thead: %d\n",        *head(list));
     fprintf(stream, "\ttail: %d\n",        *tail(list));
