@@ -194,6 +194,9 @@ void listGraphDump(list_t* list){
     fprintf(graphFilePtr, "digraph G {\n");
     fprintf(graphFilePtr, "rankdir=LR\n");
     fprintf(graphFilePtr, "bgcolor=\"transparent\"\n");
+
+    fprintf(graphFilePtr, "nodesep = 1;\n");
+    fprintf(graphFilePtr, "ranksep = 1\n");
     
     fprintf(graphFilePtr, "\tnode [shape=record, style=\"filled\", fillcolor=\"#FFA089\", fontcolor=\"black\", color=\"#007CAD\", penwidth=2.5, fontname=\"Tahoma\", fontsize=25];\n\n");
     fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];\n");
@@ -217,12 +220,12 @@ void listGraphDump(list_t* list){
     fprintf(graphFilePtr, "free_head_label [shape=box, label=\"FREE\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\",   fontcolor=\"darkblue\"];\n", FREE_CHAIN_COLOR);
 
 
-    fprintf(graphFilePtr, "head_label      -> node%d [color=\"lime\", arrowsize=2.5, penwidth=3];\n", *head(list));
-    fprintf(graphFilePtr, "tail_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *tail(list), REVERSE_CHAIN_COLOR);
+    fprintf(graphFilePtr, "head_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *head(list),    DIRECT_CHAIN_COLOR);
+    fprintf(graphFilePtr, "tail_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *tail(list),    REVERSE_CHAIN_COLOR);
     fprintf(graphFilePtr, "free_head_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *freeInd(list), FREE_CHAIN_COLOR);
     $
     // установка нодов по индексам
-    fprintf(graphFilePtr, "node0 -> node1[style=invis, weight = 100000]");
+    fprintf(graphFilePtr, "node0 -> node1[style=invis, weight = 100000];\n");
     fprintf(graphFilePtr, "\t");
     for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity; curCellInd++){
         fprintf(graphFilePtr, "node%d", curCellInd);
@@ -256,15 +259,15 @@ $
         fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
 
         if(*data(list, curCellInd) == LIST_POISON){
-            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000];\n", FREE_CHAIN_COLOR);
+            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
         }
         else{
-            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000];\n", DIRECT_CHAIN_COLOR);
+            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, headport = s, tailport = e];\n", DIRECT_CHAIN_COLOR);
         }
     }
 
 
-    for(listVal_t curCellInd = list->capacity - 1; curCellInd > 0; curCellInd--){
+    for(listVal_t curCellInd = list->capacity - 1; curCellInd > 1; curCellInd--){
         if(*data(list, curCellInd) == LIST_POISON){
             continue;
         }
@@ -275,7 +278,7 @@ $
 
         fprintf(graphFilePtr, "node%d", *prev(list, curCellInd));
 
-        fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000];\n", REVERSE_CHAIN_COLOR);      
+        fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, headport = n, tailport = w];\n", REVERSE_CHAIN_COLOR);      
     }
 
     fprintf(graphFilePtr, "\n}");
