@@ -9,28 +9,28 @@ listVal_t* data(list_t* list, listElem_t* elem){
     return &elem->data;
 }
 
-listElem_t* next(list_t* list, listElem_t* elem){
+listElem_t** next(list_t* list, listElem_t* elem){
     assert(list);
     assert(elem);
     
-    return elem->next;
+    return &elem->next;
 }
 
-listElem_t* prev(list_t* list, listElem_t* elem){
+listElem_t** prev(list_t* list, listElem_t* elem){
     assert(list);
     assert(elem);
     
-    return elem->prev;
+    return &elem->prev;
 }
 
-listElem_t* head(list_t* list){
+listElem_t** head(list_t* list){
     assert(list);
 
-    return list->head;
+    return &list->dummy->next;
 }
 
-listElem_t* tail(list_t* list){
+listElem_t** tail(list_t* list){
     assert(list);
 
-    return list->tail;
+    return &list->dummy->prev;
 }

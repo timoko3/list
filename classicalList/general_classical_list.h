@@ -43,16 +43,15 @@ struct listElem_t{
 };
 
 struct list_t{
-    listElem_t*            head;
-    listElem_t*            tail;
+    listElem_t*            dummy;
     size_t                 size;
     listStatusDescription  status;
 };
 
 listVal_t*  data(list_t* list, listElem_t* elem);
-listElem_t* next(list_t* list, listElem_t* elem);
-listElem_t* prev(list_t* list, listElem_t* elem);
-listElem_t* head(list_t* list);
-listElem_t* tail(list_t* list);
+listElem_t** next(list_t* list, listElem_t* elem);
+listElem_t** prev(list_t* list, listElem_t* elem);
+listElem_t** head(list_t* list);
+listElem_t** tail(list_t* list);
 
 #endif /* GENERAL_LIST_H */

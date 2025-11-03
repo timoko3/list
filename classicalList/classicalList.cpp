@@ -1,8 +1,7 @@
 #include "classicalList.h"
-// #include "general_classical_list.h"
-#include "general/file.h"
-#include "general/poison.h"
-#include "general/debug.h"
+#include "../general/file.h"
+#include "../general/poison.h"
+#include "../general/debug.h"
 
 #include <malloc.h>
 #include <assert.h>
@@ -16,10 +15,12 @@ listStatus listCtor(list_t* list){
 
     list->size     = 0;
 
-        head(list) = (listElem_t*) calloc(1, sizeof(listElem_t));
-    assert(list->elem);
-    
-    listInit(list);
+    listElem_t* dummy = (listElem_t*) calloc(1, sizeof(listElem_t));
+    assert(dummy);
+
+    list->dummy = dummy;
+    list->dummy->next = dummy;
+    list->dummy->prev = dummy;
     
     list->status.type = PROCESS_OK;
     return PROCESS_OK;
@@ -28,54 +29,62 @@ listStatus listCtor(list_t* list){
 listStatus listDtor(list_t* list){
     assert(list);
 
-    poisonMemory(list->elem, sizeof(listElem_t) * list->capacity);
-    free(list->elem);
-    list->elem = NULL;
+    listElem_t* curCell = *head(list);
+    while(curCell->next != *head(list)){
+        listElem_t* nextCell = *next(list, curCell);
 
-    poisonMemory(&list->size,        sizeof(list->size));
-    poisonMemory(&list->capacity,    sizeof(list->capacity));
-    poisonMemory(&*freeInd(list), sizeof(*freeInd(list)));
-    poisonMemory(&list->status,      sizeof(list->status));
+        poisonMemory(curCell, sizeof(*curCell));
+        free(curCell);
+
+        curCell = nextCell;
+    }
+
+    poisonMemory(list->dummy, sizeof(list->dummy));
+    free(list->dummy);
+    list->dummy = NULL;
+
+    poisonMemory(&list->size, sizeof(list->size));
+    poisonMemory(&list->status, sizeof(list->status));
 
     return PROCESS_OK;
 }
 
-listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue){
+listStatus listInsertAfter(list_t* list, listElem_t* insAddr, listVal_t insValue){
     assert(list);
 
     verify(list);
-    log(list, "before", "insertAfter", insIndex);
-    
-    if((list->capacity - list->size) <= 2){
-        realocateListMem(list);
-    }
+    log(list, "before", "insertAfter", 333);
 
-    *data(list, *freeInd(list)) = insValue;
-    listVal_t insertedCellPhysInd = *freeInd(list);
-    *freeInd(list) = *next(list, *freeInd(list));
+    listElem_t* newElem = (listElem_t*) calloc(1, sizeof(listElem_t));
+    assert(newElem);
+    printf("newElemAddr: %p\n", newElem);
+    *data(list, newElem) = insValue;
+    printf("next(insAddr): %p\n", *next(list, insAddr));
+    *next(list, newElem) = *next(list, insAddr);
+    *prev(list, newElem) = insAddr;
+    printf("next(newElem): %p\n", *next(list, newElem));
+    printf("prev(newElem): %p\n", *prev(list, newElem));
 
-    *next(list, insertedCellPhysInd) = *next(list, insIndex);
-    *prev(list, insertedCellPhysInd) = insIndex;
+    *prev(list, *next(list, insAddr)) = newElem;
+    *next(list, insAddr) = newElem;
 
-    *prev(list, *next(list, insIndex)) = insertedCellPhysInd;
-    *next(list, insIndex) = insertedCellPhysInd;
+    *next(list, *tail(list)) = *head(list);
 
-    *next(list, *tail(list)) = 0;
-    *prev(list, *freeInd(list)) = *tail(list);
+    printf("head(newElem): %p\n", *head(list));
 
     (list->size)++;
 
     verify(list);
-    log(list, "after", "insertAfter", insIndex);
+    log(list, "after", "insertAfter", 333);
 
     return PROCESS_OK;
 }
 
-listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue){
+listStatus listInsertBefore(list_t* list, listElem_t* insAddr, listVal_t insValue){
     assert(list);
 
-    insIndex = *prev(list, insIndex);
-    listInsertAfter(list, insIndex, insValue);
+    insAddr = *prev(list, insAddr);
+    listInsertAfter(list, insAddr, insValue);
 
     return PROCESS_OK;
 }
@@ -83,70 +92,46 @@ listStatus listInsertBefore(list_t* list, listVal_t insIndex, listVal_t insValue
 listStatus listInsertToTail(list_t* list, listVal_t insValue){
     assert(list);
     
-    listInsertBefore(list, 0, insValue);
+    listInsertBefore(list, list->dummy, insValue);
 
     return PROCESS_OK;
 }
 
-listStatus listInsertToHead(list_t* list, listVal_t insValue){
-    assert(list);
+// listStatus listInsertToHead(list_t* list, listVal_t insValue){
+//     assert(list);
     
-    listInsertAfter(list, 0, insValue);
+//     listInsertAfter(list, 0, insValue);
 
-    return PROCESS_OK;
-}
+//     return PROCESS_OK;
+// }
 
-listStatus listDelete(list_t* list, listVal_t deleteIndex){
-    assert(list);
+// listStatus listDelete(list_t* list, listVal_t deleteIndex){
+//     assert(list);
 
-    verify(list);
-    log(list, "before", "delete", deleteIndex);
+//     verify(list);
+//     log(list, "before", "delete", deleteIndex);
 
-    if(deleteIndex == *tail(list)){
-        *tail(list) = *prev(list, deleteIndex);
-    }
-    else{
-        *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
-        *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
-    }
+//     if(deleteIndex == *tail(list)){
+//         *tail(list) = *prev(list, deleteIndex);
+//     }
+//     else{
+//         *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
+//         *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
+//     }
 
-    *data(list, deleteIndex) = LIST_POISON;
-    *next(list, deleteIndex) = *freeInd(list);
-    *prev(list, deleteIndex) = *tail(list);
+//     *data(list, deleteIndex) = LIST_POISON;
+//     *next(list, deleteIndex) = *freeInd(list);
+//     *prev(list, deleteIndex) = *tail(list);
 
-    *freeInd(list) = deleteIndex;
-    *next(list, *tail(list)) = *freeInd(list);
+//     *freeInd(list) = deleteIndex;
+//     *next(list, *tail(list)) = *freeInd(list);
 
-    *next(list, *tail(list)) = 0;
+//     *next(list, *tail(list)) = 0;
 
-    (list->size)--;
+//     (list->size)--;
 
-    verify(list);
-    log(list, "after", "delete", deleteIndex);
+//     verify(list);
+//     log(list, "after", "delete", deleteIndex);
 
-    return PROCESS_OK;
-}
-
-static listStatus listInit(list_t* list, size_t startIndex){
-    assert(list);
-
-    static size_t initCount = 0;
-
-    for(size_t fillInd = startIndex; fillInd < list->capacity; fillInd++){
-        *data(list, (listVal_t) fillInd) = LIST_POISON;
-        *next(list, (listVal_t) fillInd) = (listVal_t) fillInd + 1;
-        *prev(list, (listVal_t) fillInd) = (listVal_t) fillInd - 1;
-    }
-
-    if(initCount == 0){
-        *data(list, 0) = LIST_POISON;
-        *head(list) = 0;
-        *tail(list) = 0;
-    }
-
-    initCount++;
-
-    return PROCESS_OK;
-}
-
-
+//     return PROCESS_OK;
+// }
