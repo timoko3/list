@@ -1,4 +1,4 @@
-#include "protection_list.h"
+#include "protection_classical_list.h"
 #include "general/file.h"
 #include "general/debug.h"
 
@@ -26,30 +26,24 @@ static size_t logCount = 0;
 static void assignErrorStruct(list_t* list, listStatus type);
 
 static bool connectivityCheck(list_t* list);
-static bool indexValidityCheck(list_t* list);
+static bool addressValidityCheck(list_t* list);
 
 listStatus verifyList(list_t* list, const char* function, const char* file, const int line){
     if(list == NULL){
         printf("list — нулевой указатель\n");  
     } 
     else{
-        if(list->elem == NULL){  
+        if(list->head == NULL){  
             assignErrorStruct(list, NULL_POINTER);
             printf("data — нулевой указатель\n");
         }
-        else if(list->capacity == 0){
-            assignErrorStruct(list, CAPACITY_IS_ZERO);
+        else if(list->tail == NULL){  
+            assignErrorStruct(list, NULL_POINTER);
+            printf("data — нулевой указатель\n");
         }
-        else if(list->size > list->capacity){
-            assignErrorStruct(list, SIZE_EXCEEDS_CAPACITY);
-        }
-        else if(!indexValidityCheck(list)){
+        else if(!addressValidityCheck(list)){
             assignErrorStruct(list, NON_VALID_INDEXES);
         }
-        else if(malloc_usable_size(list->elem) != (sizeof(listElem_t) * list->capacity)){
-            assignErrorStruct(list, BAD_MEMORY_ALLOCATION);
-        }
-
         else if(!connectivityCheck(list)){
             assignErrorStruct(list, LIST_NOT_CONNECTED);
         }
@@ -74,11 +68,11 @@ static void assignErrorStruct(list_t* list, listStatus type){
     }
 }
 
-static bool indexValidityCheck(list_t* list){
+static bool addressValidityCheck(list_t* list){
     assert(list);
     $
-    for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
-        if(*next(list, curCellInd) > list->capacity || *prev(list, curCellInd) > list->capacity){
+    for(listElem_t* curCell = head(list); curCell != tail(list); curCell = next(list, curCell)){
+        if(next(list, curCell) == NULL || prev(list, curCell) == NULL){
             return false;
         }
     }
@@ -90,7 +84,7 @@ static bool connectivityCheck(list_t* list){
     assert(list);
 
     size_t connectionsCount = 0;
-    for(listVal_t curCellInd = *head(list); (curCellInd != *tail(list)); curCellInd = *next(list, curCellInd)){
+    for(listElem_t* curCell = head(list); curCell->next != head(list); curCell = next(list, curCell)){
         connectionsCount++;
     }
     size_t referenceConnectionsCount = 0;
@@ -165,24 +159,21 @@ void listDumpBasic(list_t* list, FILE* stream){
 
     fprintf(stream, "listDump:\n");
 
-    fprintf(stream, "\tcapacity: %lu\n", list->capacity);
     fprintf(stream, "\tsize: %lu\n",     list->size);
-    
 
-    fprintf(stream, "\thead: %d\n",        *head(list));
-    fprintf(stream, "\ttail: %d\n",        *tail(list));
-    fprintf(stream, "\tcurFreeElem: %d\n", *freeInd(list));    
+    fprintf(stream, "\thead: %p\n",         head(list));
+    fprintf(stream, "\ttail: %p\n",         tail(list));
 
     fprintf(stream, "\telements:\n");
-    for(listVal_t curElemInd = 0; curElemInd < (listVal_t) list->capacity; curElemInd++){
-        if(*data(list, (listVal_t) curElemInd) != LIST_POISON){
-            fprintf(stream, "\t\tdata: %-10d, next: %-3d, prev: %-3d\n", *data(list, (listVal_t) curElemInd), 
-                                                                         *next(list, (listVal_t) curElemInd), 
-                                                                         *prev(list, (listVal_t) curElemInd));
+    for(listElem_t* curCell = head(list); curCell->next != head(list); curCell = next(list, curCell)){
+        if(*data(list, curCell) != LIST_POISON){
+            fprintf(stream, "\t\tdata: %-10d, next: %-3p, prev: %-3p\n", *data(list, curCell), 
+                                                                         *next(list, curCell), 
+                                                                         *prev(list, curCell));
         }                                                                         
         else{
-            fprintf(stream, "\t\tdata: PZN, next: %-3d, prev: %-3d\n", *next(list, (listVal_t) curElemInd), 
-                                                                       *prev(list, (listVal_t) curElemInd));
+            fprintf(stream, "\t\tdata: PZN, next: %-3p, prev: %-3p\n", *next(list, curCell), 
+                                                                       *prev(list, curCell));
         }
     }
 }
@@ -210,39 +201,32 @@ void listGraphDump(list_t* list){
     fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];\n");
     
 
-    size_t nodesAmount = 0;
-    for(listVal_t curCellInd = 0; curCellInd < (listVal_t) list->capacity; curCellInd++){
-        if(curCellInd == 0){
-            fprintf(graphFilePtr, "node0 [label=\"phys ind = 0 | head = %d | tail = %d | free_tail = %d\", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", *head(list), *tail(list), *freeInd(list));
-            continue;
-        }
-        
-        if(*data(list, curCellInd) != LIST_POISON){
-            fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = %d | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
+    size_t nodesCount = 0;
+    for(listElem_t* curCell = head(list); curCell->next != head(list); curCell = next(list, curCell)){
+        nodesCount++;
+
+        if(*data(list, curCell) != LIST_POISON){
+            fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | {prev = %d | next = %d} \"];\n", curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
         }
         else{
-            fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = PZN | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *prev(list, curCellInd), *next(list, curCellInd));
+            fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = PZN | {prev = %d | next = %d} \"];\n", curCell, curCell, *prev(list, curCell), *next(list, curCell));
         }
         
-        nodesAmount++;
     }
     fprintf(graphFilePtr, "\n"); 
     
     fprintf(graphFilePtr, "head_label      [shape=box, width = 2.4, height = 1.4, label=\"HEAD\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", DIRECT_CHAIN_COLOR);
     fprintf(graphFilePtr, "tail_label      [shape=box, width = 2.4, height = 1.4, label=\"TAIL\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", REVERSE_CHAIN_COLOR);
-    fprintf(graphFilePtr, "free_head_label [shape=box, width = 2.4, height = 1.4, label=\"FREE\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", FREE_CHAIN_COLOR);
 
 
-    fprintf(graphFilePtr, "head_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *head(list),    DIRECT_CHAIN_COLOR);
-    fprintf(graphFilePtr, "tail_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *tail(list),    REVERSE_CHAIN_COLOR);
-    fprintf(graphFilePtr, "free_head_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", *freeInd(list), FREE_CHAIN_COLOR);
+    fprintf(graphFilePtr, "head_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", head(list),    DIRECT_CHAIN_COLOR);
+    fprintf(graphFilePtr, "tail_label      -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", tail(list),    REVERSE_CHAIN_COLOR);
     $
     // установка нодов по индексам
-    fprintf(graphFilePtr, "node0 -> node1[style=invis, weight = 100000];\n");
     fprintf(graphFilePtr, "\t");
-    for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity; curCellInd++){
-        fprintf(graphFilePtr, "node%d", curCellInd);
-        if(curCellInd != (listVal_t) list->capacity - 1){
+    for(listElem_t* curCell = head(list); curCell->next != head(list); curCell = next(list, curCell)){
+        fprintf(graphFilePtr, "node%d", curCell);
+        if(curCell != tail(list)){
             fprintf(graphFilePtr, " -> ");
         }
         else{
@@ -251,49 +235,33 @@ void listGraphDump(list_t* list){
     }
 $
 
-    if(list->status.type == NON_VALID_INDEXES){
-        for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
-            if(*next(list, curCellInd) > list->capacity){
-                fprintf(graphFilePtr, "\tnode%d [label=\"phys   Ind = %d\", shape=doubleoctagon, fillcolor = \"red\", fontcolor=\"white\", color=\"#007CAD\", penwidth=3, fontname=\"Tahoma Bold\", fontsize=40];\n", *next(list, curCellInd), *next(list, curCellInd));
-            }
-        }
-    }
+    // if(list->status.type == NON_VALID_INDEXES){
+    //     for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
+    //         if(*next(list, curCellInd) > list->capacity){
+    //             fprintf(graphFilePtr, "\tnode%d [label=\"phys   Ind = %d\", shape=doubleoctagon, fillcolor = \"red\", fontcolor=\"white\", color=\"#007CAD\", penwidth=3, fontname=\"Tahoma Bold\", fontsize=40];\n", *next(list, curCellInd), *next(list, curCellInd));
+    //         }
+    //     }
+    // }
 
     fprintf(graphFilePtr, "\t");
-    for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity - 1; curCellInd++){
-        if(*next(list, curCellInd) == 0){
-             fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-            continue;
-        }
+    for(listElem_t* curCell = head(list); curCell->next != head(list); curCell = next(list, curCell)){
 
-        if(*data(list, curCellInd) == LIST_POISON){
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,                FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd),   FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
-        }
-        else{
             
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd), REVERSE_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-        }
-    
-        fprintf(graphFilePtr, "node%d", curCellInd);
+        fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCell,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+        fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", next(list, curCell), REVERSE_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+
+        fprintf(graphFilePtr, "node%d", curCell);
         
         fprintf(graphFilePtr, " -> ");
 
-        fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
+        fprintf(graphFilePtr, "node%d", next(list, curCell));
 
-        if(*data(list, curCellInd) == LIST_POISON){
-            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
-        }
-        else{
-            fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
-        }
+        fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
     }
 
     fprintf(graphFilePtr, "\n}");
 
     fclose(graphFilePtr);
-    
     
     char convertToImageCommandString[CONVERSION_COMMAND_SIZE];
 

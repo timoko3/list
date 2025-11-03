@@ -1,5 +1,5 @@
-#include "list.h"
-#include "general_list.h"
+#include "classicalList.h"
+// #include "general_classical_list.h"
 #include "general/file.h"
 #include "general/poison.h"
 #include "general/debug.h"
@@ -10,16 +10,13 @@
 #define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
 
 static listStatus listInit(list_t* list, size_t startIndex = 1);
-static listStatus realocateListMem(list_t* list); //.. ьуь
 
 listStatus listCtor(list_t* list){
     assert(list);
-    assert(list->capacity > 2);
 
     list->size     = 0;
-    *freeInd(list) = 1;
 
-    list->elem = (listElem_t*) calloc(list->capacity, sizeof(listElem_t));
+        head(list) = (listElem_t*) calloc(1, sizeof(listElem_t));
     assert(list->elem);
     
     listInit(list);
@@ -153,30 +150,3 @@ static listStatus listInit(list_t* list, size_t startIndex){
 }
 
 
-static listStatus realocateListMem(list_t* list){
-    assert(list);
-
-    static size_t reallocationCount = 0;
-
-    verify(list);
-    log(list, "before", "reallocation", reallocationCount);
-
-    printf("difference: %lu\n", list->capacity - list->size);
-
-    size_t initStartIndex = list->capacity;
-
-    list->capacity = list->capacity * 2;
-    listElem_t* temp = (listElem_t*) realloc(list->elem, list->capacity * sizeof(listElem_t));
-    assert(temp);
-
-    list->elem = temp;
-    
-    listInit(list, initStartIndex);
-    
-    reallocationCount++;
-
-    verify(list);
-    log(list, "after", "reallocation", reallocationCount);
-
-    return PROCESS_OK;
-}

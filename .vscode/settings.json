@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "list": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "vector": "cpp"
     }
 }
