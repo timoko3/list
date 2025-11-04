@@ -5,9 +5,10 @@
 
 int main(void){
     list_t list1;
-    list1.capacity = 10;
+    list1.capacity = 7;
 
     listCtor(&list1);
+
 
     listInsertToTail(&list1, 10);
     listInsertToTail(&list1, 20);
@@ -22,4 +23,4 @@ int main(void){
     
 
     listDtor(&list1);
-}
+}п

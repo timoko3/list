@@ -22,6 +22,7 @@ const char* FREE_NODE_FONTCOLOR = "#222926ff";
 
 
 static size_t logCount = 0;
+static double SCALE_KOEF = 20;
 
 static void assignErrorStruct(list_t* list, listStatus type);
 
@@ -136,13 +137,13 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
 
     fprintf(logFilePtr, "dump:\n");
 
-    // listDumpBasic(list, logFilePtr);
+    listDumpBasic(list, logFilePtr);
 
     fprintf(logFilePtr, "graphDump:\n");
     $
     listGraphDump(list);
     $
-    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%lu.png style=\"width: 85%%; height: auto;\">\n", logCount);
+    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%lu.png style=\"width: %lf%%; height: auto;\">\n", logCount, SCALE_KOEF + list->size * SCALE_KOEF);
 
     fprintf(logFilePtr, "\n----------------------------------------------------------------------------\n");
 
@@ -163,20 +164,12 @@ void listDumpBasic(list_t* list, FILE* stream){
     fprintf(stream, "\telements:\n");
 
     for(listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON; curCell = *next(list, curCell)){
-        if(*data(list, curCell) != LIST_POISON){
-            fprintf(stream, "\t\taddr: %p, data: %-3d, next: %-3p, prev: %-3p\n", 
-                    curCell,
-                    *data(list, curCell), 
-                    *next(list, curCell), 
-                    *prev(list, curCell));
-        }                                                                         
-        else{
-            fprintf(stream, "\t\taddr: %p, data: PZN, next: %-3p, prev: %-3p\n",
-                curCell, 
+        fprintf(stream, "\t\taddr: %p, data: %-3d, next: %-3p, prev: %-3p\n", 
+                curCell,
+                *data(list, curCell), 
                 *next(list, curCell), 
-                *prev(list, curCell));
-        }
-    }
+                *prev(list, curCell));                                                                  
+}
 }
 
 void listGraphDump(list_t* list){
@@ -207,14 +200,7 @@ void listGraphDump(list_t* list){
     fprintf(graphFilePtr, "node%d [label=\"address = %p | data = PZN | {head = %p | tail = %p} \", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", list->dummy, list->dummy, *head(list), *tail(list));
     
     for(listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON; curCell = *next(list, curCell)){
-
-        if(*data(list, curCell) != LIST_POISON){
-            fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | {prev = %p | next = %p} \"];\n", curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
-        }
-        else{
-            fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = PZN | {prev = %p | next = %p} \"];\n", curCell, curCell, *prev(list, curCell), *next(list, curCell));
-        }
-        
+        fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | {prev = %p | next = %p} \"];\n", curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
     }
     fprintf(graphFilePtr, "\n"); 
     
@@ -228,9 +214,9 @@ void listGraphDump(list_t* list){
     // установка нодов по индексам
     fprintf(graphFilePtr, "\t");
     fprintf(graphFilePtr, "node%d -> node%d[style=invis, weight = 100000];\n", list->dummy, *head(list));
-    for(listElem_t* curCell = *head(list); curCell != *tail(list); curCell = *next(list, curCell)){
+    for(listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON && list->size > 1; curCell = *next(list, curCell)){
         fprintf(graphFilePtr, "node%d", curCell);
-        if(*next(list, curCell) != *tail(list)){
+        if(*data(list, *next(list, curCell)) != LIST_POISON){
             fprintf(graphFilePtr, " -> ");
         }
         else{
@@ -250,11 +236,13 @@ $
     fprintf(graphFilePtr, "\t");
 
     printf("head: %p, tail: %p\n", *head(list), *tail(list));
-    for(listElem_t* curCell = *head(list); curCell != *tail(list); curCell = *next(list, curCell)){
-
+    for(listElem_t* curCell = *head(list); curCell != list->dummy; curCell = *next(list, curCell)){
+        if(*next(list, curCell) == list->dummy){
+            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCell,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+            break;
+        }
             
         fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCell,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-        fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", *next(list, curCell), REVERSE_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
 
         fprintf(graphFilePtr, "node%d", curCell);
         

@@ -22,6 +22,7 @@ const char* FREE_NODE_FONTCOLOR = "#222926ff";
 
 
 static size_t logCount = 0;
+static double SCALE_KOEF = 8.5;
 
 static void assignErrorStruct(list_t* list, listStatus type);
 
@@ -153,7 +154,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     $
     listGraphDump(list);
     $
-    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%lu.png style=\"width: 85%%; height: auto;\">\n", logCount);
+    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%lu.png style=\"width: %lf%%; height: auto;\">\n", logCount, list->capacity * SCALE_KOEF);
 
     fprintf(logFilePtr, "\n----------------------------------------------------------------------------\n");
 

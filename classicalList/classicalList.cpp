@@ -31,7 +31,7 @@ listStatus listDtor(list_t* list){
     assert(list);
 
     listElem_t* curCell = *head(list);
-    while(curCell != *tail(list)){
+    while(*data(list, curCell) != LIST_POISON){
         listElem_t* nextCell = *next(list, curCell);
 
         poisonMemory(curCell, sizeof(*curCell));
