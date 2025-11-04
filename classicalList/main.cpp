@@ -15,19 +15,16 @@ int main(void){
     FILE* tempDebug = myOpenFile(&tempDeb);
 
     listCtor(&list1);
-    listDumpBasic(&list1, tempDebug);
+
+
     listInsertToTail(&list1, 10);
-    listDumpBasic(&list1, tempDebug);
     listInsertToTail(&list1, 20);
-    listDumpBasic(&list1, tempDebug);
     listInsertToTail(&list1, 30);
-    listDumpBasic(&list1, tempDebug);
-    listInsertToTail(&list1, 40);
-    listDumpBasic(&list1, tempDebug);
+    curAnchorNode toDelete = listInsertToTail(&list1, 40);
     listInsertToTail(&list1, 50);
-    listDumpBasic(&list1, tempDebug);
     listInsertToTail(&list1, 45);
     
+    listDelete(&list1, toDelete);
 
     listDumpBasic(&list1, tempDebug);
 

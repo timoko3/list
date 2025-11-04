@@ -3,14 +3,13 @@
 #include "../general/poison.h"
 #include "../general/debug.h"
 
+#include <stdint.h>
 #include <malloc.h>
 #include <assert.h>
 
-#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
+#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return NULL
 
-static listStatus listInit(list_t* list, size_t startIndex = 1);
-
-listStatus listCtor(list_t* list){
+curAnchorNode listCtor(list_t* list){
     assert(list);
 
     list->size     = 0;
@@ -23,11 +22,10 @@ listStatus listCtor(list_t* list){
     list->dummy->next = dummy;
     list->dummy->prev = dummy;
     
-    list->status.type = PROCESS_OK;
-    return PROCESS_OK;
+    return list->dummy;
 }
 
-listStatus listDtor(list_t* list){
+curAnchorNode listDtor(list_t* list){
     assert(list);
 
     listElem_t* curCell = *head(list);
@@ -47,15 +45,15 @@ listStatus listDtor(list_t* list){
     poisonMemory(&list->size, sizeof(list->size));
     poisonMemory(&list->status, sizeof(list->status));
 
-    return PROCESS_OK;
+    return NULL;
 }
 
-listStatus listInsertAfter(list_t* list, listElem_t* insAddr, listVal_t insValue){
+curAnchorNode listInsertAfter(list_t* list, listElem_t* insAddr, listVal_t insValue){
     assert(list);
 
     verify(list);
-    log(list, "before", "insertAfter", 333);
-
+    log(list, "before", "insertAfter", (long long)(uintptr_t) insAddr);
+    
     listElem_t* newElem = (listElem_t*) calloc(1, sizeof(listElem_t));
     assert(newElem);
     printf("newElemAddr: %p\n", newElem);
@@ -76,63 +74,56 @@ listStatus listInsertAfter(list_t* list, listElem_t* insAddr, listVal_t insValue
     (list->size)++;
 
     verify(list);
-    log(list, "after", "insertAfter", 333);
+    log(list, "after", "insertAfter", (long long)(uintptr_t) insAddr);
 
-    return PROCESS_OK;
+    return newElem;
 }
 
-listStatus listInsertBefore(list_t* list, listElem_t* insAddr, listVal_t insValue){
+curAnchorNode listInsertBefore(list_t* list, listElem_t* insAddr, listVal_t insValue){
     assert(list);
 
     insAddr = *prev(list, insAddr);
-    listInsertAfter(list, insAddr, insValue);
+    curAnchorNode anchor = listInsertAfter(list, insAddr, insValue);
 
-    return PROCESS_OK;
+    return anchor;
 }
 
-listStatus listInsertToTail(list_t* list, listVal_t insValue){
+curAnchorNode listInsertToTail(list_t* list, listVal_t insValue){
     assert(list);
     
-    listInsertBefore(list, list->dummy, insValue);
+    curAnchorNode anchor = listInsertBefore(list, list->dummy, insValue);
 
-    return PROCESS_OK;
+    return anchor;
 }
 
-// listStatus listInsertToHead(list_t* list, listVal_t insValue){
-//     assert(list);
+curAnchorNode listInsertToHead(list_t* list, listVal_t insValue){
+    assert(list);
     
-//     listInsertAfter(list, 0, insValue);
+    curAnchorNode anchor = listInsertAfter(list, list->dummy, insValue);
 
-//     return PROCESS_OK;
-// }
+    return anchor;
+}
 
-// listStatus listDelete(list_t* list, listVal_t deleteIndex){
-//     assert(list);
+curAnchorNode listDelete(list_t* list, listElem_t* deleteAddr){
+    assert(list);
 
-//     verify(list);
-//     log(list, "before", "delete", deleteIndex);
+    long long logParam = (long long)(uintptr_t) deleteAddr;
 
-//     if(deleteIndex == *tail(list)){
-//         *tail(list) = *prev(list, deleteIndex);
-//     }
-//     else{
-//         *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
-//         *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
-//     }
+    verify(list);
+    log(list, "before", "delete", logParam);
 
-//     *data(list, deleteIndex) = LIST_POISON;
-//     *next(list, deleteIndex) = *freeInd(list);
-//     *prev(list, deleteIndex) = *tail(list);
+    *next(list, *prev(list, deleteAddr)) = *next(list, deleteAddr);
+    *prev(list, *next(list, deleteAddr)) = *prev(list, deleteAddr);
 
-//     *freeInd(list) = deleteIndex;
-//     *next(list, *tail(list)) = *freeInd(list);
+    poisonMemory(deleteAddr, sizeof(*deleteAddr));
+    free(deleteAddr);
 
-//     *next(list, *tail(list)) = 0;
+    *next(list, *tail(list)) = list->dummy;
 
-//     (list->size)--;
+    (list->size)--;
 
-//     verify(list);
-//     log(list, "after", "delete", deleteIndex);
+    verify(list);
+    log(list, "after", "delete", logParam);
 
-//     return PROCESS_OK;
-// }
+    return *tail(list);
+}

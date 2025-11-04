@@ -2,6 +2,7 @@
     "files.associations": {
         "list": "cpp",
         "cmath": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "cstdint": "cpp"
     }
 }

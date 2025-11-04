@@ -104,14 +104,9 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     verify(list);
     log(list, "before", "delete", deleteIndex);
-
-    if(deleteIndex == *tail(list)){
-        *tail(list) = *prev(list, deleteIndex);
-    }
-    else{
-        *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
-        *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
-    }
+    
+    *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
+    *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
 
     *data(list, deleteIndex) = LIST_POISON;
     *next(list, deleteIndex) = *freeInd(list);
