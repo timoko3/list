@@ -9,7 +9,6 @@ int main(void){
 
     listCtor(&list1);
 
-
     listInsertToTail(&list1, 10);
     listInsertToTail(&list1, 20);
     listInsertToTail(&list1, 30);
@@ -20,7 +19,5 @@ int main(void){
 
     listDelete(&list1, 3);
     
-    
-
     listDtor(&list1);
-}п
+}

@@ -1,8 +1,8 @@
 #include "list.h"
 #include "general_list.h"
-#include "general/file.h"
-#include "general/poison.h"
-#include "general/debug.h"
+#include "../general/file.h"
+#include "../general/poison.h"
+#include "../general/debug.h"
 
 #include <malloc.h>
 #include <assert.h>

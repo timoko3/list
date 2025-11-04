@@ -1,6 +1,7 @@
 #include "protection_list.h"
-#include "general/file.h"
-#include "general/debug.h"
+#include "../general/file.h"
+#include "../general/debug.h"
+#include "string.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -30,6 +31,9 @@ static bool connectivityCheck(list_t* list);
 static bool indexValidityCheck(list_t* list);
 
 listStatus verifyList(list_t* list, const char* function, const char* file, const int line){
+    assert(function);
+    assert(file);
+
     if(list == NULL){
         printf("list — нулевой указатель\n");  
     } 
@@ -60,6 +64,7 @@ listStatus verifyList(list_t* list, const char* function, const char* file, cons
             return PROCESS_OK;
         }
     }
+
     printf("%s\n", list->status.text);
     htmlLog(list, file, function, line, "error", "verification", -1);
     return list->status.type;
@@ -107,59 +112,131 @@ static bool connectivityCheck(list_t* list){
     return true;
 }
 
-void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine, 
-                           const char* callCase, const char* actionName, listVal_t parameter){
+void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine,
+             const char* callCase, const char* actionName, listVal_t parameter){
     assert(list);
     assert(callFileName);
     assert(callFuncName);
     assert(callCase);
     assert(actionName);
 
-
     fileDescription logFile = {};
-    if(logCount == 0){
-        logFile = {
-            HTML_LOG_FILE_NAME,
-            "wb"
-        };
+    if (logCount == 0) {
+        logFile = (fileDescription){ HTML_LOG_FILE_NAME, "wb" };
+    } 
+    else {
+        logFile = (fileDescription){ HTML_LOG_FILE_NAME, "ab" };
     }
-    else{
-        logFile = {
-            HTML_LOG_FILE_NAME,
-            "ab"
-        };
-    }
-    $
+
     FILE* logFilePtr = myOpenFile(&logFile);
     assert(logFilePtr);
-    $
 
-
-    fprintf(logFilePtr, "<pre>\n");
-
-    fprintf(logFilePtr, "<h3> DUMP <font color = red> %s </font> %s (%d) </h3>\n", callCase, actionName, parameter);
-
-    if(parameter == -1){
-        fprintf(logFilePtr, "<font color = red>%s</font>", list->status.text);
+    /* Заголовок и стили */
+    if (logCount == 0) {
+        fprintf(logFilePtr,
+            "<!DOCTYPE html><html lang=\"ru\"><head>"
+            "<meta charset=\"utf-8\">"
+            "<title>List Dump Log</title>"
+            "<style>"
+              "body{font-family:'Segoe UI',Tahoma,sans-serif;background:#e6ecf2;color:#1e272e;margin:20px;font-size:18px;line-height:1.6;}"
+              "h2,h3,h4{margin:8px 0 6px 0;}"
+              ".dump-card{background:#ffffff;border-radius:14px;padding:22px 26px;box-shadow:0 6px 22px rgba(0,0,0,0.12);margin-bottom:36px;}"
+              ".dump-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px;}"
+              ".case-badge{font-weight:700;color:#fff;padding:8px 14px;border-radius:8px;font-size:1.2rem;}"
+              ".case-badge.error{background:#ff5252;} .case-badge.info{background:#007bff;} .case-badge.ok{background:#00b894;}"
+              ".location{background:#fff2cc;border-left:8px solid #ffb300;padding:12px 16px;border-radius:10px;font-size:1.05rem;line-height:1.4;}"
+              "table{border-collapse:collapse;width:100%%;font-family:monospace;margin-top:14px;font-size:1rem;}"
+              "th,td{border:1px solid #d0d7de;padding:10px 14px;text-align:center;}"
+              "th{background:#f0f4fa;font-weight:700;}"
+              ".used{color:#006400;font-weight:700;}"
+              ".free{background:#ffeef0;color:#9c2c3c;}"
+              ".graph-wrap{text-align:center;margin-top:18px;}"
+              ".graph-link{display:inline-block;border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);}"
+              ".small-meta{color:#444;font-size:0.95rem;margin-top:8px;}"
+            "</style></head><body>\n");
     }
 
-    fprintf(logFilePtr, "In file %s at %s:%d\n", callFileName, callFuncName, callLine);
+    fprintf(logFilePtr, "<div class=\"dump-card\">\n");
 
+    const char* caseClass = "info";
+    if (list->status.type != PROCESS_OK) caseClass = "error";
 
-    fprintf(logFilePtr, "dump:\n");
+    fprintf(logFilePtr,
+        "<div class=\"dump-header\">"
+          "<div>"
+            "<h2 style=\"margin:0; font-size:1.8rem;\"> DUMP — "
+            "<span class=\"case-badge %s\">%s</span> "
+            "<span style=\"margin-left:10px; color:#333;\">%s(%d)</span>"
+            "</h2>"
+          "</div>"
+          "<div class=\"location\">"
+            "<b>File:</b> %s<br>"
+            "<b>Function:</b> %s<br>"
+            "<b>Line:</b> %d"
+          "</div>"
+        "</div>\n",
+        caseClass, callCase, actionName, parameter,
+        callFileName, callFuncName, callLine);
 
-    listDumpBasic(list, logFilePtr);
+    if (parameter == -1) {
+        fprintf(logFilePtr,
+            "<p style=\"color:#b00020;font-weight:700;margin-top:12px;font-size:1.1rem;\">%s</p>\n",
+            list->status.text);
+    }
 
-    fprintf(logFilePtr, "graphDump:\n");
-    $
+    /* Переменные списка */
+    fprintf(logFilePtr,
+        "<h4 style=\"margin-top:16px;margin-bottom:8px;font-size:1.3rem;\"> Переменные списка</h4>\n"
+        "<table><tbody>"
+        "<tr><td><b>capacity</b></td><td>%lu</td></tr>"
+        "<tr><td><b>size</b></td><td>%lu</td></tr>"
+        "<tr><td><b>head</b></td><td>%d</td></tr>"
+        "<tr><td><b>tail</b></td><td>%d</td></tr>"
+        "<tr><td><b>free index</b></td><td>%d</td></tr>"
+        "</tbody></table>\n",
+        list->capacity, list->size, *head(list), *tail(list), *freeInd(list));
+
+    /* Таблица элементов */
+    fprintf(logFilePtr,
+        "<h4 style=\"margin-top:18px;margin-bottom:8px;font-size:1.3rem;\"> Элементы списка</h4>\n"
+        "<table><thead><tr>"
+        "<th>Index</th><th>Data</th><th>Prev</th><th>Next</th>"
+        "</tr></thead><tbody>\n");
+
+    for (listVal_t i = 0; i < (listVal_t)list->capacity; i++) {
+        bool isFree = (*data(list, i) == LIST_POISON);
+        fprintf(logFilePtr, "<tr class=\"%s\">", isFree ? "free" : "");
+        fprintf(logFilePtr, "<td>%d</td>", i);
+        if (isFree)
+            fprintf(logFilePtr, "<td>PZN</td>");
+        else
+            fprintf(logFilePtr, "<td class=\"used\">%d</td>", *data(list, i));
+        fprintf(logFilePtr, "<td>%d</td><td>%d</td></tr>\n", *prev(list, i), *next(list, i));
+    }
+
+    fprintf(logFilePtr, "</tbody></table>\n");
+
+    /* Генерация графа */
     listGraphDump(list);
-    $
-    fprintf(logFilePtr, "\n\n <img src=graphDumps/graph%lu.png style=\"width: %lf%%; height: auto;\">\n", logCount, list->capacity * SCALE_KOEF);
 
-    fprintf(logFilePtr, "\n----------------------------------------------------------------------------\n");
+    double widthPercent = (double)list->capacity * SCALE_KOEF;
+
+    fprintf(logFilePtr,
+        "<h4 style=\"margin-top:20px;margin-bottom:10px;font-size:1.3rem;\"> Визуализация списка</h4>\n"
+        "<div class=\"graph-wrap\">"
+          "<a class=\"graph-link\" href=\"graphDumps/graph%lu.png\" target=\"_blank\" title=\"Открыть в полном размере\">"
+            "<img src=\"graphDumps/graph%lu.png\" style=\"width:%0.3f%%;height:auto;display:block;\" alt=\"graph dump\">"
+          "</a>"
+          "<div class=\"small-meta\">Клик чтобы увидить картинку полностью</div>"
+        "</div>\n",
+        logCount, logCount, widthPercent);
+
+    fprintf(logFilePtr, "</div>\n");
 
     fclose(logFilePtr);
 }
+
+
 
 void listDumpBasic(list_t* list, FILE* stream){
     assert(list);
@@ -193,14 +270,15 @@ void listGraphDump(list_t* list){
     assert(list);
 
     logCount++;    
-    $
+
     fileDescription graphDump = {
         GRAPH_DUMP_DOT_FILE_NAME,
         "wb"
     };
+
     FILE* graphFilePtr = myOpenFile(&graphDump);
     assert(graphFilePtr);
-    $
+
     fprintf(graphFilePtr, "digraph G {\n");
     fprintf(graphFilePtr, "rankdir=LR\n");
     fprintf(graphFilePtr, "bgcolor=\"transparent\"\n");
@@ -251,7 +329,6 @@ void listGraphDump(list_t* list){
             fprintf(graphFilePtr, "[style=invis, weight=1000000];\n");
         }
     }
-$
 
     if(list->status.type == NON_VALID_INDEXES){
         for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
@@ -262,7 +339,7 @@ $
     }
 
     fprintf(graphFilePtr, "\t");
-    for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity - 1; curCellInd++){
+    for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity; curCellInd++){
         if(*next(list, curCellInd) == 0){
              fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
             continue;
@@ -270,25 +347,32 @@ $
 
         if(*data(list, curCellInd) == LIST_POISON){
             fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,                FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd),   FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
+
+            if(curCellInd < list->capacity - 1){
+                fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd),   FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
+            }
         }
         else{
             
             fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd), REVERSE_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+            if(curCellInd < list->capacity - 1){
+                fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd), REVERSE_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+            }
         }
-    
-        fprintf(graphFilePtr, "node%d", curCellInd);
         
-        fprintf(graphFilePtr, " -> ");
+        if(curCellInd < list->capacity - 1){
+            fprintf(graphFilePtr, "node%d", curCellInd);
+            
+            fprintf(graphFilePtr, " -> ");
 
-        fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
+            fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
 
-        if(*data(list, curCellInd) == LIST_POISON){
-            fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
-        }
-        else{
-            fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
+            if(*data(list, curCellInd) == LIST_POISON){
+                fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
+            }
+            else{
+                fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
+            }
         }
     }
 
