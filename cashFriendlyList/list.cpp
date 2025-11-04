@@ -159,7 +159,7 @@ static listStatus realocateListMem(list_t* list){
     static size_t reallocationCount = 0;
 
     verify(list);
-    log(list, "before", "reallocation", reallocationCount);
+    log(list, "before", "reallocation", (listVal_t) reallocationCount);
 
     printf("difference: %lu\n", list->capacity - list->size);
 
@@ -176,7 +176,7 @@ static listStatus realocateListMem(list_t* list){
     reallocationCount++;
 
     verify(list);
-    log(list, "after", "reallocation", reallocationCount);
+    log(list, "after", "reallocation", (listVal_t) reallocationCount);
 
     return PROCESS_OK;
 }
