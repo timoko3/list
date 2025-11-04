@@ -330,16 +330,6 @@ void listGraphDump(list_t* list){
         }
     }
 
-    if(list->status.type == NON_VALID_INDEXES){
-        for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
-            if(*next(list, (listVal_t) curCellInd) > (listVal_t) list->capacity){
-                fprintf(graphFilePtr, "\tnode%d [label=\"phys   Ind = %d\","
-                     "shape=doubleoctagon, fillcolor = \"red\", fontcolor=\"white\", color=\"#007CAD\", penwidth=3, fontname=\"Tahoma Bold\", fontsize=40];\n",
-                     *next(list, (listVal_t) curCellInd), *next(list, (listVal_t) curCellInd));
-            }
-        }
-    }
-
     fprintf(graphFilePtr, "\t");
     for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity; curCellInd++){
         if(*next(list, curCellInd) == 0){
@@ -374,6 +364,16 @@ void listGraphDump(list_t* list){
             }
             else{
                 fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
+            }
+        }
+    }
+
+    if(list->status.type == NON_VALID_INDEXES){
+        for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
+            if(*next(list, (listVal_t) curCellInd) > (listVal_t) list->capacity){
+                fprintf(graphFilePtr, "\tnode%d [label=\"phys   Ind = %d\","
+                     "shape=doubleoctagon, fillcolor = \"red\", fontcolor=\"white\", color=\"#007CAD\", penwidth=3, fontname=\"Tahoma Bold\", fontsize=40];\n",
+                     *next(list, (listVal_t) curCellInd), *next(list, (listVal_t) curCellInd));
             }
         }
     }
