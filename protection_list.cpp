@@ -133,6 +133,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     assert(logFilePtr);
     $
 
+
     fprintf(logFilePtr, "<pre>\n");
 
     fprintf(logFilePtr, "<h3> DUMP <font color = red> %s </font> %s (%d) </h3>\n", callCase, actionName, parameter);

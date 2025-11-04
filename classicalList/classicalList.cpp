@@ -19,6 +19,7 @@ listStatus listCtor(list_t* list){
     assert(dummy);
 
     list->dummy = dummy;
+    list->dummy->data = LIST_POISON;
     list->dummy->next = dummy;
     list->dummy->prev = dummy;
     
@@ -30,7 +31,7 @@ listStatus listDtor(list_t* list){
     assert(list);
 
     listElem_t* curCell = *head(list);
-    while(curCell->next != *head(list)){
+    while(curCell != *tail(list)){
         listElem_t* nextCell = *next(list, curCell);
 
         poisonMemory(curCell, sizeof(*curCell));
@@ -68,7 +69,7 @@ listStatus listInsertAfter(list_t* list, listElem_t* insAddr, listVal_t insValue
     *prev(list, *next(list, insAddr)) = newElem;
     *next(list, insAddr) = newElem;
 
-    *next(list, *tail(list)) = *head(list);
+    // *next(list, *tail(list)) = *head(list);
 
     printf("head(newElem): %p\n", *head(list));
 
