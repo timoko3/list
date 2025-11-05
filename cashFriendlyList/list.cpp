@@ -46,9 +46,11 @@ listStatus listDtor(list_t* list){
 listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue){
     assert(list);
 
+    #ifdef DEBUG
     verify(list);
     log(list, "before", "insertAfter", insIndex);
-    
+    #endif /* DEBUG */
+
     if((list->capacity - list->size) <= 2){
         realocateListMem(list);
     }
@@ -68,8 +70,10 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
 
     (list->size)++;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "after", "insertAfter", insIndex);
+    #endif /* DEBUG */
 
     return PROCESS_OK;
 }
@@ -102,9 +106,11 @@ listStatus listInsertToHead(list_t* list, listVal_t insValue){
 listStatus listDelete(list_t* list, listVal_t deleteIndex){
     assert(list);
 
+    #ifdef DEBUG
     verify(list);
     log(list, "before", "delete", deleteIndex);
-    
+    #endif DEBUG
+
     *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
     *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
 
@@ -119,8 +125,10 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     (list->size)--;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "after", "delete", deleteIndex);
+    #endif /* DEBUG */
 
     return PROCESS_OK;
 }

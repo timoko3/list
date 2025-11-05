@@ -4,6 +4,8 @@
 #include "protection_list.h"
 #include "general_list.h"
 
+// #define DEBUG
+
 listStatus listCtor(list_t* list);
 listStatus listDtor(list_t* list);
 

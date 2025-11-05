@@ -13,7 +13,7 @@ int main(void){
     listInsertToTail(&list1, 20);
     listInsertToTail(&list1, 30);
     listInsertToTail(&list1, 40);
-    *next(&list1, 2) = 300;
+    // *next(&list1, 2) = 300;
     listInsertToTail(&list1, 50);
     listInsertToTail(&list1, 45);
 
