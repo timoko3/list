@@ -12,6 +12,7 @@
 static listStatus listInit(list_t* list, size_t startIndex = 1);
 static listStatus realocateListMem(list_t* list); //.. ьуь
 static listStatus deRealocateListMem(list_t* list);
+static void placeNodeRight(list_t* list, listVal_t logicalInd, listVal_t physicalInd);
 
 listStatus listCtor(list_t* list){
     assert(list);
@@ -189,9 +190,54 @@ static listStatus realocateListMem(list_t* list){
     return PROCESS_OK;
 }
 
-// listStatus listLinearize(list_t* list){
+listStatus listLinearize(list_t* list){
+    assert(list);
 
-// }
+    #ifdef DEBUG
+    verify(list);
+    log(list, "before", "linearization", 1);
+    #endif /* DEBUG */
+
+    listVal_t logicalInd = *head(list);
+    for(listVal_t physicalInd = *head(list); (*data(list, physicalInd) != LIST_POISON); physicalInd = *next(list, physicalInd)){
+        $
+        if(logicalInd != physicalInd){
+            $
+            // if(*data(list, logicalInd) == LIST_POISON){
+                placeNodeRight(list, logicalInd, physicalInd);
+                physicalInd = logicalInd;
+                
+                
+            // }
+        }
+        logicalInd++;
+    }
+
+    #ifdef DEBUG
+    // verify(list);
+    log(list, "after", "linearization", 1);
+    #endif /* DEBUG */ 
+
+    return PROCESS_OK;
+}
+
+static void placeNodeRight(list_t* list, 
+        listVal_t logicalInd, 
+        listVal_t physicalInd){
+    assert(list);
+            
+    if(*data(list, logicalInd) == LIST_POISON) *freeInd(list) = physicalInd;
+
+    listElem_t temp = list->elem[physicalInd];
+$
+    list->elem[physicalInd] = list->elem[logicalInd];
+$
+    list->elem[logicalInd] = temp;
+    
+    *next(list, *prev(list, logicalInd)) = logicalInd;
+    *prev(list, *next(list, logicalInd)) = logicalInd;
+
+}
 
 listStatus listFreeUnusedMem(list_t* list){
     assert(list);
