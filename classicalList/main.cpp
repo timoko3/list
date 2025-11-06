@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 int main(void){
-    list_t list1;
+    listClassical_t list1;
 
     fileDescription tempDeb{
         "tempDebug.txt",
@@ -14,20 +14,20 @@ int main(void){
 
     FILE* tempDebug = myOpenFile(&tempDeb);
 
-    listCtor(&list1);
+    listClassicalCtor(&list1);
 
 
-    listInsertToTail(&list1, 10);
-    listInsertToTail(&list1, 20);
-    listInsertToTail(&list1, 30);
-    curAnchorNode toDelete = listInsertToTail(&list1, 40);
-    listInsertToTail(&list1, 50);
-    listInsertToTail(&list1, 45);
+    listClassicalInsertToTail(&list1, 10);
+    listClassicalInsertToTail(&list1, 20);
+    listClassicalInsertToTail(&list1, 30);
+    curAnchorNode toDelete = listClassicalInsertToTail(&list1, 40);
+    listClassicalInsertToTail(&list1, 50);
+    listClassicalInsertToTail(&list1, 45);
     
-    listDelete(&list1, toDelete);
+    listClassicalDelete(&list1, toDelete);
 
     listDumpBasic(&list1, tempDebug);
 
     fclose(tempDebug);
-    listDtor(&list1);
+    listClassicalDtor(&list1);
 }

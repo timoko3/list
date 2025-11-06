@@ -1,18 +1,20 @@
-#ifndef LIST_H
-#define LIST_H
+#ifndef CLASSICAL_LIST_H
+#define CLASSICAL_LIST_H
 
 #include "protection_classical_list.h"
 #include "general_classical_list.h"
 
-typedef listElem_t* curAnchorNode;
+// #define DEBUG
 
-curAnchorNode listCtor(list_t* list);
-curAnchorNode listDtor(list_t* list);
+typedef listClassicalElem_t* curAnchorNode;
 
-curAnchorNode listInsertAfter (list_t* list, listElem_t* index,    listVal_t insValue);
-curAnchorNode listInsertBefore(list_t* list, listElem_t* insIndex, listVal_t insValue);
-curAnchorNode listInsertToHead(list_t* list, listVal_t insValue);
-curAnchorNode listInsertToTail(list_t* list, listVal_t insValue);
-curAnchorNode listDelete      (list_t* list, listElem_t* deleteIndex);
+curAnchorNode listClassicalCtor(listClassical_t* list);
+curAnchorNode listClassicalDtor(listClassical_t* list);
 
-#endif /* LIST_H */
+curAnchorNode listClassicalInsertAfter (listClassical_t* list, listClassicalElem_t* index,    listVal_t insValue);
+curAnchorNode listClassicalInsertBefore(listClassical_t* list, listClassicalElem_t* insIndex, listVal_t insValue);
+curAnchorNode listClassicalInsertToHead(listClassical_t* list, listVal_t insValue);
+curAnchorNode listClassicalInsertToTail(listClassical_t* list, listVal_t insValue);
+curAnchorNode listClassicalDelete      (listClassical_t* list, listClassicalElem_t* deleteIndex);
+
+#endif /* CLASSICAL_LIST_H */

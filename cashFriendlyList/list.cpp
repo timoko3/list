@@ -10,7 +10,7 @@
 #define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
 
 static listStatus listInit(list_t* list, size_t startIndex = 1);
-static listStatus realocateListMem(list_t* list); //.. ьуь
+static listStatus reallocateList(list_t* list); //.. ьуь
 static listStatus deRealocateListMem(list_t* list);
 static void placeNodeRight(list_t* list, listVal_t logicalInd, listVal_t physicalInd);
 
@@ -54,7 +54,7 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
     #endif /* DEBUG */
 
     if((list->capacity - list->size) <= 2){
-        realocateListMem(list);
+        reallocateList(list);
     }
 
     *data(list, *freeInd(list)) = insValue;
@@ -97,7 +97,7 @@ listStatus listInsertToTail(list_t* list, listVal_t insValue){
     return PROCESS_OK;
 }
 
-listStatus listInsertToHead(list_t* list, listVal_t insValue){
+listStatus lisInsertToHead(list_t* list, listVal_t insValue){
     assert(list);
     
     listInsertAfter(list, 0, insValue);
@@ -157,39 +157,6 @@ static listStatus listInit(list_t* list, size_t startIndex){
     return PROCESS_OK;
 }
 
-
-static listStatus realocateListMem(list_t* list){
-    assert(list);
-
-    static size_t reallocationCount = 0;
-
-    #ifdef DEBUG
-    verify(list);
-    log(list, "before", "reallocation", (listVal_t) reallocationCount);
-    #endif /* DEBUG */
-
-    printf("difference: %lu\n", list->capacity - list->size);
-
-    size_t initStartIndex = list->capacity;
-
-    list->capacity = list->capacity * 2;
-    listElem_t* temp = (listElem_t*) realloc(list->elem, list->capacity * sizeof(listElem_t));
-    assert(temp);
-
-    list->elem = temp;
-    
-    listInit(list, initStartIndex);
-    
-    reallocationCount++;
-
-    #ifdef DEBUG
-    verify(list);
-    log(list, "after", "reallocation", (listVal_t) reallocationCount);
-    #endif /* DEBUG */
-
-    return PROCESS_OK;
-}
-
 listStatus listLinearize(list_t* list){
     assert(list);
 
@@ -219,24 +186,6 @@ listStatus listLinearize(list_t* list){
     #endif /* DEBUG */ 
 
     return PROCESS_OK;
-}
-
-static void placeNodeRight(list_t* list, 
-        listVal_t logicalInd, 
-        listVal_t physicalInd){
-    assert(list);
-            
-    if(*data(list, logicalInd) == LIST_POISON) *freeInd(list) = physicalInd;
-
-    listElem_t temp = list->elem[physicalInd];
-$
-    list->elem[physicalInd] = list->elem[logicalInd];
-$
-    list->elem[logicalInd] = temp;
-    
-    *next(list, *prev(list, logicalInd)) = logicalInd;
-    *prev(list, *next(list, logicalInd)) = logicalInd;
-
 }
 
 listStatus listFreeUnusedMem(list_t* list){
@@ -271,3 +220,63 @@ listStatus listFreeUnusedMem(list_t* list){
 
     return PROCESS_OK;
 }
+
+listStatus listOptimize(list_t* list){
+    assert(list);
+
+    listLinearize(list);
+    listFreeUnusedMem(list);
+
+    return PROCESS_OK;
+}
+
+static void placeNodeRight(list_t* list, 
+        listVal_t logicalInd, 
+        listVal_t physicalInd){
+    assert(list);
+            
+    if(*data(list, logicalInd) == LIST_POISON) *freeInd(list) = physicalInd;
+
+    listElem_t temp = list->elem[physicalInd];
+$
+    list->elem[physicalInd] = list->elem[logicalInd];
+$
+    list->elem[logicalInd] = temp;
+    
+    *next(list, *prev(list, logicalInd)) = logicalInd;
+    *prev(list, *next(list, logicalInd)) = logicalInd;
+
+}
+
+static listStatus reallocateList(list_t* list){
+    assert(list);
+
+    static size_t reallocationCount = 0;
+
+    #ifdef DEBUG
+    verify(list);
+    log(list, "before", "reallocation", (listVal_t) reallocationCount);
+    #endif /* DEBUG */
+
+    printf("difference: %lu\n", list->capacity - list->size);
+
+    size_t initStartIndex = list->capacity;
+
+    list->capacity = list->capacity * 2;
+    listElem_t* temp = (listElem_t*) realloc(list->elem, list->capacity * sizeof(listElem_t));
+    assert(temp);
+
+    list->elem = temp;
+    
+    listInit(list, initStartIndex);
+    
+    reallocationCount++;
+
+    #ifdef DEBUG
+    verify(list);
+    log(list, "after", "reallocation", (listVal_t) reallocationCount);
+    #endif /* DEBUG */
+
+    return PROCESS_OK;
+}
+

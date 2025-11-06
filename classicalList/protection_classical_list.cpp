@@ -26,30 +26,30 @@ const char* FREE_NODE_FONTCOLOR = "#222926ff";
 static size_t logCount = 0;
 static double SCALE_KOEF = 20;
 
-static void assignErrorStruct(list_t* list, listStatus type);
+static void assignErrorStruct(listClassical_t* list, listClassicalStatus type);
 
-static bool connectivityCheck(list_t* list);
-static bool addressValidityCheck(list_t* list);
+static bool connectivityCheck(listClassical_t* list);
+static bool addressValidityCheck(listClassical_t* list);
 
-listStatus verifyList(list_t* list, const char* function, const char* file, const int line){
+listClassicalStatus verifyList(listClassical_t* list, const char* function, const char* file, const int line){
     if(list == NULL){
         printf("list — нулевой указатель\n");  
     } 
     else{
         if(list->dummy == NULL){  
-            assignErrorStruct(list, NULL_POINTER);
+            assignErrorStruct(list, CLASSICAL_NULL_POINTER);
             printf("dummy — нулевой указатель\n");
         }
         else if(!addressValidityCheck(list)){
-            assignErrorStruct(list, NON_VALID_INDEXES);
+            assignErrorStruct(list, CLASSICAL_NON_VALID_INDEXES);
         }
         else if(!connectivityCheck(list)){
-            assignErrorStruct(list, LIST_NOT_CONNECTED);
+            assignErrorStruct(list, CLASSICAL_LIST_NOT_CONNECTED);
         }
 
         else{
-            assignErrorStruct(list, PROCESS_OK);
-            return PROCESS_OK;
+            assignErrorStruct(list, CLASSICAL_PROCESS_OK);
+            return CLASSICAL_PROCESS_OK;
         }
     }
     printf("%s\n", list->status.text);
@@ -57,20 +57,20 @@ listStatus verifyList(list_t* list, const char* function, const char* file, cons
     return list->status.type;
 }
 
-static void assignErrorStruct(list_t* list, listStatus type){
+static void assignErrorStruct(listClassical_t* list, listClassicalStatus type){
     assert(list);
 
-    for(size_t curErrInd = 0; curErrInd < sizeof(listStatuses) / sizeof(listStatusDescription); curErrInd++){
-        if(listStatuses[curErrInd].type == type){
-            list->status = listStatuses[curErrInd];
+    for(size_t curErrInd = 0; curErrInd < sizeof(listClassicalStatuses) / sizeof(listClassicalStatusDescription); curErrInd++){
+        if(listClassicalStatuses[curErrInd].type == type){
+            list->status = listClassicalStatuses[curErrInd];
         }
     }
 }
 
-static bool addressValidityCheck(list_t* list){
+static bool addressValidityCheck(listClassical_t* list){
     assert(list);
     $
-    for(listElem_t* curCell = *head(list); curCell != *tail(list); curCell = *next(list, curCell)){
+    for(listClassicalElem_t* curCell = *head(list); curCell != *tail(list); curCell = *next(list, curCell)){
         if(*next(list, curCell) == NULL || *prev(list, curCell) == NULL){
             return false;
         }
@@ -79,11 +79,11 @@ static bool addressValidityCheck(list_t* list){
     return true;
 }
 
-static bool connectivityCheck(list_t* list){
+static bool connectivityCheck(listClassical_t* list){
     assert(list);
 
     size_t connectionsCount = 0;
-    for(listElem_t* curCell = *head(list); *next(list, curCell) != list->dummy; curCell = *next(list, curCell)){
+    for(listClassicalElem_t* curCell = *head(list); *next(list, curCell) != list->dummy; curCell = *next(list, curCell)){
         connectionsCount++;
     }
     size_t referenceConnectionsCount = 0;
@@ -99,7 +99,7 @@ static bool connectivityCheck(list_t* list){
     return true;
 }
 
-void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine,
+void htmlLog(listClassical_t* list, const char* callFileName, const char* callFuncName, int callLine,
              const char* callCase, const char* actionName, long long parameter){
     assert(list);
     assert(callFileName);
@@ -150,7 +150,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     fprintf(logFilePtr, "<div class=\"dump-card\">\n");
 
     const char* caseClass = "info";
-    if (list->status.type != PROCESS_OK) caseClass = "error";
+    if (list->status.type != CLASSICAL_PROCESS_OK) caseClass = "error";
 
     fprintf(logFilePtr,
         "<div class=\"dump-header\">"
@@ -191,10 +191,10 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
         "<th>Addr</th><th>Data</th><th>Prev</th><th>Next</th>"
         "</tr></thead><tbody>\n");
 
-    for (listElem_t* curCell = *head(list);
-         *data(list, curCell) != LIST_POISON;
+    for (listClassicalElem_t* curCell = *head(list);
+         *data(list, curCell) != LIST_CLASSICAL_POISON;
          curCell = *next(list, curCell)){
-        bool isFree = (*data(list, curCell) == LIST_POISON);
+        bool isFree = (*data(list, curCell) == LIST_CLASSICAL_POISON);
         fprintf(logFilePtr, "<tr class=\"%s\">", isFree ? "free" : "");
         fprintf(logFilePtr, "<td>%p</td>", curCell);
 
@@ -234,7 +234,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
 }
 
 
-void listDumpBasic(list_t* list, FILE* stream){
+void listDumpBasic(listClassical_t* list, FILE* stream){
     assert(list);
     assert(stream);
 
@@ -245,7 +245,7 @@ void listDumpBasic(list_t* list, FILE* stream){
     fprintf(stream, "head: %p\n", *head(list));
     fprintf(stream, "tail: %p\n", *tail(list));
     fprintf(stream, "elements:\n");
-    for (listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON; curCell = *next(list, curCell)){
+    for (listClassicalElem_t* curCell = *head(list); *data(list, curCell) != LIST_CLASSICAL_POISON; curCell = *next(list, curCell)){
         fprintf(stream, "\taddr: %p, data: %-3d, next: %p, prev: %p\n",
                 curCell,
                 *data(list, curCell),
@@ -256,7 +256,7 @@ void listDumpBasic(list_t* list, FILE* stream){
 }
 
 
-void listGraphDump(list_t* list){
+void listGraphDump(listClassical_t* list){
     assert(list);
 
     logCount++;    
@@ -283,7 +283,7 @@ void listGraphDump(list_t* list){
 
     fprintf(graphFilePtr, "node%d [label=\"address = %p | data = PZN | {tail = %p | head = %p} \", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", (listVal_t)(uintptr_t) list->dummy, list->dummy, *tail(list), *head(list));
     
-    for(listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON; curCell = *next(list, curCell)){
+    for(listClassicalElem_t* curCell = *head(list); *data(list, curCell) != LIST_CLASSICAL_POISON; curCell = *next(list, curCell)){
         fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | {prev = %p | next = %p} \"];\n",(listVal_t)(uintptr_t) curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
     }
     fprintf(graphFilePtr, "\n"); 
@@ -298,9 +298,9 @@ void listGraphDump(list_t* list){
     // установка нодов по индексам
     fprintf(graphFilePtr, "\t");
     fprintf(graphFilePtr, "node%d -> node%d[style=invis, weight = 100000];\n", (listVal_t)(uintptr_t) list->dummy, (listVal_t)(uintptr_t) *head(list));
-    for(listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON && list->size > 1; curCell = *next(list, curCell)){
+    for(listClassicalElem_t* curCell = *head(list); *data(list, curCell) != LIST_CLASSICAL_POISON && list->size > 1; curCell = *next(list, curCell)){
         fprintf(graphFilePtr, "node%d", (listVal_t)(uintptr_t) curCell);
-        if(*data(list, *next(list, curCell)) != LIST_POISON){
+        if(*data(list, *next(list, curCell)) != LIST_CLASSICAL_POISON){
             fprintf(graphFilePtr, " -> ");
         }
         else{
@@ -309,7 +309,7 @@ void listGraphDump(list_t* list){
     }
 $
 
-    // if(list->status.type == NON_VALID_INDEXES){
+    // if(list->status.type == CLASSICAL_NON_VALID_INDEXES){
     //     for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
     //         if(*next(list, curCellInd) > list->capacity){
     //             fprintf(graphFilePtr, "\tnode%d [label=\"phys   Ind = %d\", shape=doubleoctagon, fillcolor = \"red\", fontcolor=\"white\", color=\"#007CAD\", penwidth=3, fontname=\"Tahoma Bold\", fontsize=40];\n", *next(list, curCellInd), *next(list, curCellInd));
@@ -322,7 +322,7 @@ $
     // printf("head: %p, tail: %p\n", *head(list), *tail(list));
 
     bool startPass = true;
-    for(listElem_t* curCell = *head(list); (curCell != *head(list)) || startPass; curCell = *next(list, curCell)){
+    for(listClassicalElem_t* curCell = *head(list); (curCell != *head(list)) || startPass; curCell = *next(list, curCell)){
         startPass = false;
 
         if(curCell != list->dummy) fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", (listVal_t)(uintptr_t) curCell, DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);

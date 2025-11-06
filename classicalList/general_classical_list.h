@@ -1,5 +1,5 @@
-#ifndef GENERAL_LIST_H
-#define GENERAL_LIST_H
+#ifndef GENERAL__CLASSICAL_LIST_H
+#define GENERAL__CLASSICAL_LIST_H
 
 #include <limits.h>
 #include <stddef.h>
@@ -8,50 +8,51 @@
 
 typedef int listVal_t;
 
-const listVal_t LIST_POISON = INT_MAX;
+const listVal_t LIST_CLASSICAL_POISON = INT_MAX;
 
-enum listStatus{
-    PROCESS_OK,
-    NULL_POINTER,
-    CAPACITY_EXCEEDS_LIMIT,
-    BAD_MEMORY_ALLOCATION,
-    CAPACITY_IS_ZERO,
-    SIZE_EXCEEDS_CAPACITY,
-    NON_VALID_INDEXES,
-    LIST_NOT_CONNECTED
+enum listClassicalStatus{
+    CLASSICAL_PROCESS_OK,
+    CLASSICAL_NULL_POINTER,
+    CLASSICAL_CAPACITY_EXCEEDS_LIMIT,
+    CLASSICAL_BAD_MEMORY_ALLOCATION,
+    CLASSICAL_CAPACITY_IS_ZERO,
+    CLASSICAL_SIZE_EXCEEDS_CAPACITY,
+    CLASSICAL_NON_VALID_INDEXES,
+    CLASSICAL_LIST_NOT_CONNECTED
 };
 
-struct listStatusDescription{
-    listStatus  type;
+struct listClassicalStatusDescription{
+    listClassicalStatus  type;
     const char* text;
 };
 
-static struct listStatusDescription listStatuses[]{ 
-    {PROCESS_OK,                    "Все хорошо\n"},
-    {CAPACITY_EXCEEDS_LIMIT,        "Значение capacity превышает максимально возможное\n"}, 
-    {NULL_POINTER,                  "Указатели не должны быть нулевыми\n"},
-    {CAPACITY_IS_ZERO,              "Capacity равно 0\n"}, 
-    {BAD_MEMORY_ALLOCATION,         "Некорректное выделение памяти\n"},
-    {NON_VALID_INDEXES,             "prev или next имеют значение не принадлежащее списку\n"},
-    {LIST_NOT_CONNECTED,            "Список не соединен или соединен не верно\n"}
+static struct listClassicalStatusDescription listClassicalStatuses[]{ 
+    {CLASSICAL_PROCESS_OK,                    "Все хорошо\n"},
+    {CLASSICAL_CAPACITY_EXCEEDS_LIMIT,        "Значение capacity превышает максимально возможное\n"}, 
+    {CLASSICAL_NULL_POINTER,                  "Указатели не должны быть нулевыми\n"},
+    {CLASSICAL_CAPACITY_IS_ZERO,              "Capacity равно 0\n"}, 
+    {CLASSICAL_BAD_MEMORY_ALLOCATION,         "Некорректное выделение памяти\n"},
+    {CLASSICAL_NON_VALID_INDEXES,             "prev или next имеют значение не принадлежащее списку\n"},
+    {CLASSICAL_LIST_NOT_CONNECTED,            "Список не соединен или соединен не верно\n"}
 };
 
-struct listElem_t{
+struct listClassicalElem_t{
     listVal_t   data;
-    listElem_t* next;
-    listElem_t* prev;
+    listClassicalElem_t* next;
+    listClassicalElem_t* prev;
 };
 
-struct list_t{
-    listElem_t*            dummy;
+struct listClassical_t{
+    listClassicalElem_t*   dummy;
     size_t                 size;
-    listStatusDescription  status;
+
+    listClassicalStatusDescription  status;
 };
 
-listVal_t*  data(list_t* list, listElem_t* elem);
-listElem_t** next(list_t* list, listElem_t* elem);
-listElem_t** prev(list_t* list, listElem_t* elem);
-listElem_t** head(list_t* list);
-listElem_t** tail(list_t* list);
+listVal_t*  data(listClassical_t* list, listClassicalElem_t* elem);
+listClassicalElem_t** next(listClassical_t* list, listClassicalElem_t* elem);
+listClassicalElem_t** prev(listClassical_t* list, listClassicalElem_t* elem);
+listClassicalElem_t** head(listClassical_t* list);
+listClassicalElem_t** tail(listClassical_t* list);
 
-#endif /* GENERAL_LIST_H */
+#endif /* GENERAL__CLASSICAL_LIST_H */

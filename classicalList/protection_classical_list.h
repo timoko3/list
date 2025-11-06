@@ -5,11 +5,11 @@
 
 #include <stdio.h>
 
-listStatus verifyList(list_t* list, const char* function, const char* file, const int line);
+listClassicalStatus verifyList(listClassical_t* list, const char* function, const char* file, const int line);
 
-void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine,
+void htmlLog(listClassical_t* list, const char* callFileName, const char* callFuncName, int callLine,
                            const char* callCase, const char* actionName, long long parameter);
-void listDumpBasic(list_t* list, FILE* stream);
-void listGraphDump(list_t* list);
+void listDumpBasic(listClassical_t* list, FILE* stream);
+void listGraphDump(listClassical_t* list);
 
 #endif /* PROTECTION_H */

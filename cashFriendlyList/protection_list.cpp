@@ -8,18 +8,18 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
-const char* HTML_LOG_FILE_NAME       = "logList.html";
-const listVal_t MAX_NODE_NAME_SIZE   = 20;
-const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng graphDumps/graphDump.dot -o graphDumps/graph%d.png";
-const size_t CONVERSION_COMMAND_SIZE = 61;
+static const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
+static const char* HTML_LOG_FILE_NAME       = "logList.html";
+static const listVal_t MAX_NODE_NAME_SIZE   = 20;
+static const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng graphDumps/graphDump.dot -o graphDumps/graph%d.png";
+static const size_t CONVERSION_COMMAND_SIZE = 61;
 
-const char* DIRECT_CHAIN_COLOR  = "#6A5ACD";
-const char* REVERSE_CHAIN_COLOR = "#c75a96ff";
-const char* BORDER_CHAIN_COLOR  = "#ffe9b5ff";
-const char* FREE_CHAIN_COLOR    = "#326932";
-const char* FREE_NODE_FILLCOLOR = "#16c56eff";
-const char* FREE_NODE_FONTCOLOR = "#222926ff";
+static const char* DIRECT_CHAIN_COLOR  = "#6A5ACD";
+static const char* REVERSE_CHAIN_COLOR = "#c75a96ff";
+static const char* BORDER_CHAIN_COLOR  = "#ffe9b5ff";
+static const char* FREE_CHAIN_COLOR    = "#326932";
+static const char* FREE_NODE_FILLCOLOR = "#16c56eff";
+static const char* FREE_NODE_FONTCOLOR = "#222926ff";
 
 
 static size_t logCount = 0;

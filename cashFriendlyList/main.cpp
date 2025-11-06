@@ -19,8 +19,9 @@ int main(void){
 
     listDelete(&list1, 3);
 
-    listLinearize(&list1);
-    // listFreeUnusedMem(&list1);
+    listOptimize(&list1);
+
+    listInsertToTail(&list1, 59);
     
     listDtor(&list1);
 }

@@ -7,30 +7,30 @@
 #include <malloc.h>
 #include <assert.h>
 
-#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return NULL
+#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != CLASSICAL_PROCESS_OK) return NULL
 
-curAnchorNode listCtor(list_t* list){
+curAnchorNode listClassicalCtor(listClassical_t* list){
     assert(list);
 
     list->size     = 0;
 
-    listElem_t* dummy = (listElem_t*) calloc(1, sizeof(listElem_t));
+    listClassicalElem_t* dummy = (listClassicalElem_t*) calloc(1, sizeof(listClassicalElem_t));
     assert(dummy);
 
     list->dummy = dummy;
-    list->dummy->data = LIST_POISON;
+    list->dummy->data = LIST_CLASSICAL_POISON;
     list->dummy->next = dummy;
     list->dummy->prev = dummy;
     
     return list->dummy;
 }
 
-curAnchorNode listDtor(list_t* list){
+curAnchorNode listClassicalDtor(listClassical_t* list){
     assert(list);
 
-    listElem_t* curCell = *head(list);
-    while(*data(list, curCell) != LIST_POISON){
-        listElem_t* nextCell = *next(list, curCell);
+    listClassicalElem_t* curCell = *head(list);
+    while(*data(list, curCell) != LIST_CLASSICAL_POISON){
+        listClassicalElem_t* nextCell = *next(list, curCell);
 
         poisonMemory(curCell, sizeof(*curCell));
         free(curCell);
@@ -48,69 +48,69 @@ curAnchorNode listDtor(list_t* list){
     return NULL;
 }
 
-curAnchorNode listInsertAfter(list_t* list, listElem_t* insAddr, listVal_t insValue){
+curAnchorNode listClassicalInsertAfter(listClassical_t* list, listClassicalElem_t* insAddr, listVal_t insValue){
     assert(list);
 
+    #ifdef DEBUG
     verify(list);
     log(list, "before", "insertAfter", (long long)(uintptr_t) insAddr);
-    
-    listElem_t* newElem = (listElem_t*) calloc(1, sizeof(listElem_t));
+    #endif /* DEBUG */
+
+    listClassicalElem_t* newElem = (listClassicalElem_t*) calloc(1, sizeof(listClassicalElem_t));
     assert(newElem);
-    printf("newElemAddr: %p\n", newElem);
+    
     *data(list, newElem) = insValue;
-    printf("next(insAddr): %p\n", *next(list, insAddr));
     *next(list, newElem) = *next(list, insAddr);
     *prev(list, newElem) = insAddr;
-    printf("next(newElem): %p\n", *next(list, newElem));
-    printf("prev(newElem): %p\n", *prev(list, newElem));
 
     *prev(list, *next(list, insAddr)) = newElem;
     *next(list, insAddr) = newElem;
 
-    // *next(list, *tail(list)) = *head(list);
-
-    printf("head(newElem): %p\n", *head(list));
 
     (list->size)++;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "after", "insertAfter", (long long)(uintptr_t) insAddr);
+    #endif /* DEBUG */
 
     return newElem;
 }
 
-curAnchorNode listInsertBefore(list_t* list, listElem_t* insAddr, listVal_t insValue){
+curAnchorNode listClassicalInsertBefore(listClassical_t* list, listClassicalElem_t* insAddr, listVal_t insValue){
     assert(list);
 
     insAddr = *prev(list, insAddr);
-    curAnchorNode anchor = listInsertAfter(list, insAddr, insValue);
+    curAnchorNode anchor = listClassicalInsertAfter(list, insAddr, insValue);
 
     return anchor;
 }
 
-curAnchorNode listInsertToTail(list_t* list, listVal_t insValue){
+curAnchorNode listClassicalInsertToTail(listClassical_t* list, listVal_t insValue){
     assert(list);
     
-    curAnchorNode anchor = listInsertBefore(list, list->dummy, insValue);
+    curAnchorNode anchor = listClassicalInsertBefore(list, list->dummy, insValue);
 
     return anchor;
 }
 
-curAnchorNode listInsertToHead(list_t* list, listVal_t insValue){
+curAnchorNode listClassicalInsertToHead(listClassical_t* list, listVal_t insValue){
     assert(list);
     
-    curAnchorNode anchor = listInsertAfter(list, list->dummy, insValue);
+    curAnchorNode anchor = listClassicalInsertAfter(list, list->dummy, insValue);
 
     return anchor;
 }
 
-curAnchorNode listDelete(list_t* list, listElem_t* deleteAddr){
+curAnchorNode listClassicalDelete(listClassical_t* list, listClassicalElem_t* deleteAddr){
     assert(list);
 
     long long logParam = (long long)(uintptr_t) deleteAddr;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "before", "delete", logParam);
+    #endif /* DEBUG */
 
     *next(list, *prev(list, deleteAddr)) = *next(list, deleteAddr);
     *prev(list, *next(list, deleteAddr)) = *prev(list, deleteAddr);
@@ -122,8 +122,10 @@ curAnchorNode listDelete(list_t* list, listElem_t* deleteAddr){
 
     (list->size)--;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "after", "delete", logParam);
+    #endif /* DEBUG */
 
     return *tail(list);
 }

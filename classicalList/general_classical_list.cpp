@@ -2,34 +2,34 @@
 
 #include <assert.h>
 
-listVal_t* data(list_t* list, listElem_t* elem){
+listVal_t* data(listClassical_t* list, listClassicalElem_t* elem){
     assert(list);
     assert(elem);
 
     return &elem->data;
 }
 
-listElem_t** next(list_t* list, listElem_t* elem){
+listClassicalElem_t** next(listClassical_t* list, listClassicalElem_t* elem){
     assert(list);
     assert(elem);
     
     return &elem->next;
 }
 
-listElem_t** prev(list_t* list, listElem_t* elem){
+listClassicalElem_t** prev(listClassical_t* list, listClassicalElem_t* elem){
     assert(list);
     assert(elem);
     
     return &elem->prev;
 }
 
-listElem_t** head(list_t* list){
+listClassicalElem_t** head(listClassical_t* list){
     assert(list);
 
     return &list->dummy->next;
 }
 
-listElem_t** tail(list_t* list){
+listClassicalElem_t** tail(listClassical_t* list){
     assert(list);
 
     return &list->dummy->prev;
