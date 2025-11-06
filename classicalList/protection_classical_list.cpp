@@ -281,7 +281,7 @@ void listGraphDump(list_t* list){
     // fprintf(graphFilePtr, "edge [color=\"#2d714f\", arrowsize=1, penwidth=5, arrowhead=\"vee\", style=\"bold\"];\n");
     
 
-    fprintf(graphFilePtr, "node%d [label=\"address = %p | data = PZN | {head = %p | tail = %p} \", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", (listVal_t)(uintptr_t) list->dummy, list->dummy, *head(list), *tail(list));
+    fprintf(graphFilePtr, "node%d [label=\"address = %p | data = PZN | {tail = %p | head = %p} \", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", (listVal_t)(uintptr_t) list->dummy, list->dummy, *tail(list), *head(list));
     
     for(listElem_t* curCell = *head(list); *data(list, curCell) != LIST_POISON; curCell = *next(list, curCell)){
         fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | {prev = %p | next = %p} \"];\n",(listVal_t)(uintptr_t) curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
@@ -319,14 +319,14 @@ $
 
     fprintf(graphFilePtr, "\t");
 
-    printf("head: %p, tail: %p\n", *head(list), *tail(list));
-    for(listElem_t* curCell = *head(list); curCell != list->dummy; curCell = *next(list, curCell)){
-        if(*next(list, curCell) == list->dummy){
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", (listVal_t)(uintptr_t) curCell, DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-            break;
-        }
-            
-        fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", (listVal_t)(uintptr_t) curCell, DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+    // printf("head: %p, tail: %p\n", *head(list), *tail(list));
+
+    bool startPass = true;
+    for(listElem_t* curCell = *head(list); (curCell != *head(list)) || startPass; curCell = *next(list, curCell)){
+        startPass = false;
+
+        if(curCell != list->dummy) fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", (listVal_t)(uintptr_t) curCell, DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+        else                       fprintf(graphFilePtr, "node%d \n", (listVal_t)(uintptr_t) curCell);
 
         fprintf(graphFilePtr, "node%d", (listVal_t)(uintptr_t) curCell);
         

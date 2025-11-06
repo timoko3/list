@@ -331,25 +331,48 @@ void listGraphDump(list_t* list){
     }
 
     fprintf(graphFilePtr, "\t");
-    for(listVal_t curCellInd = 1; curCellInd < (listVal_t) list->capacity; curCellInd++){
-        if(*next(list, curCellInd) == 0){
-             fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+    bool isPrevNodeBad = false;
+    for(listVal_t curCellInd = 0; curCellInd < (listVal_t) list->capacity; curCellInd++){
+        if(*head(list) == 0 && *tail(list) == 0 && curCellInd == 0){
             continue;
         }
 
-        if(*data(list, curCellInd) == LIST_POISON){
+        if(*next(list, curCellInd) == 0){
+            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+
+            fprintf(graphFilePtr, "node%d", curCellInd);
+            
+            fprintf(graphFilePtr, " -> ");
+
+            fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
+            fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
+
+            continue;
+        }
+
+        
+        if(*data(list, curCellInd) == LIST_POISON && curCellInd != 0){
             fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,                FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
 
             if(curCellInd < (listVal_t) list->capacity - 1){
                 fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd),   FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
             }
         }
-        else{
+        else if(curCellInd != 0){
             
-            fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
-            if(curCellInd < (listVal_t) list->capacity - 1){
-                fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd), REVERSE_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+            if(*next(list, curCellInd) > list->capacity){
+                fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR, BORDER_CHAIN_COLOR);
             }
+            else{
+                fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR , REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+                if(curCellInd < (listVal_t) list->capacity - 1){
+                    fprintf(graphFilePtr, "node%d [fillcolor = \"%s:%s\", fontcolor = \"%s\"]\n", *next(list, curCellInd), DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
+                }
+            }
+        }
+
+        if(isPrevNodeBad){
+            fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,              REVERSE_CHAIN_COLOR, BORDER_CHAIN_COLOR);
         }
         
         if(curCellInd < (listVal_t) list->capacity - 1){
@@ -359,11 +382,31 @@ void listGraphDump(list_t* list){
 
             fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
 
-            if(*data(list, curCellInd) == LIST_POISON){
+            if(*data(list, curCellInd) == LIST_POISON && curCellInd != 0){
                 fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
             }
             else{
-                fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
+                if(*next(list, curCellInd) > list->capacity){
+                    fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false];\n", DIRECT_CHAIN_COLOR);
+                }
+                else{
+                    fprintf(graphFilePtr, "[color=\"%s:%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, dir = both];\n", DIRECT_CHAIN_COLOR, REVERSE_CHAIN_COLOR);
+                }
+
+
+                if(isPrevNodeBad){
+                    fprintf(graphFilePtr, "node%d", curCellInd);
+            
+                    fprintf(graphFilePtr, " -> ");
+
+                    fprintf(graphFilePtr, "node%d", *prev(list, curCellInd));
+
+                    fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false];\n", REVERSE_CHAIN_COLOR);
+
+                    isPrevNodeBad = false;
+                }
+
+                if(*next(list, curCellInd) > list->capacity) isPrevNodeBad = true;
             }
         }
     }
