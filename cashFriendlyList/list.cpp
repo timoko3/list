@@ -197,17 +197,16 @@ listStatus listFreeUnusedMem(list_t* list){
     #endif /* DEBUG */
 
     listVal_t curCellInd = *head(list);
-    printf("listCurCellInd = %d, capacity = %d\n", curCellInd, list->capacity);
     for(; (*next(list, curCellInd) != 0); curCellInd = *next(list, curCellInd)){
         $
         continue;
 
     }
-    printf("listCurCellInd = %d, capacity = %d\n", curCellInd, list->capacity);
+    LPRINTF("listCurCellInd = %d, capacity = %lu\n", curCellInd, list->capacity);
 
-    list->capacity = curCellInd + 1 ;  
+    list->capacity = (size_t) curCellInd + 1 ;  
 
-    printf("listCurCellInd = %d, capacity = %d\n", curCellInd, list->capacity);
+    LPRINTF("listCurCellInd = %d, capacity = %lu\n", curCellInd, list->capacity);
     listElem_t* temp = (listElem_t*) realloc(list->elem, list->capacity * sizeof(listElem_t));
     assert(temp);
 
@@ -258,7 +257,7 @@ static listStatus reallocateList(list_t* list){
     log(list, "before", "reallocation", (listVal_t) reallocationCount);
     #endif /* DEBUG */
 
-    printf("difference: %lu\n", list->capacity - list->size);
+    LPRINTF("difference: %lu\n", list->capacity - list->size);
 
     size_t initStartIndex = list->capacity;
 

@@ -6,7 +6,6 @@
 
 int main(void){
     listClassical_t list1;
-
     fileDescription tempDeb{
         "tempDebug.txt",
         "wb"

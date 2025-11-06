@@ -1,5 +1,7 @@
 #include "protection_classical_list.h"
 #include "../general/file.h"
+
+#define DEBUG
 #include "../general/debug.h"
 
 #include <stdint.h>
@@ -10,7 +12,7 @@
 #include <malloc.h>
 
 const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
-const char* HTML_LOG_FILE_NAME       = "logList.html";
+const char* LOG_FILE_NAME       = "logList.html";
 const listVal_t MAX_NODE_NAME_SIZE   = 20;
 const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng graphDumps/graphDump.dot -o graphDumps/graph%d.png";
 const size_t CONVERSION_COMMAND_SIZE = 61;
@@ -24,7 +26,7 @@ const char* FREE_NODE_FONTCOLOR = "#222926ff";
 
 
 static size_t logCount = 0;
-static double SCALE_KOEF = 20;
+static double SCALE_KOEF = 15;
 
 static void assignErrorStruct(listClassical_t* list, listClassicalStatus type);
 
@@ -33,12 +35,12 @@ static bool addressValidityCheck(listClassical_t* list);
 
 listClassicalStatus verifyList(listClassical_t* list, const char* function, const char* file, const int line){
     if(list == NULL){
-        printf("list — нулевой указатель\n");  
+        LPRINTF("list — нулевой указатель\n");  
     } 
     else{
         if(list->dummy == NULL){  
             assignErrorStruct(list, CLASSICAL_NULL_POINTER);
-            printf("dummy — нулевой указатель\n");
+            LPRINTF("dummy — нулевой указатель\n");
         }
         else if(!addressValidityCheck(list)){
             assignErrorStruct(list, CLASSICAL_NON_VALID_INDEXES);
@@ -52,7 +54,7 @@ listClassicalStatus verifyList(listClassical_t* list, const char* function, cons
             return CLASSICAL_PROCESS_OK;
         }
     }
-    printf("%s\n", list->status.text);
+    LPRINTF("%s\n", list->status.text);
     htmlLog(list, file, function, line, "error", "verification", -1);
     return list->status.type;
 }
@@ -92,7 +94,7 @@ static bool connectivityCheck(listClassical_t* list){
         referenceConnectionsCount = list->size - 1;
     }
 
-    fprintf(stdout, "connectionsCount: %lu, size: %lu\n", connectionsCount, referenceConnectionsCount);
+    LPRINTF("connectionsCount: %lu, size: %lu\n", connectionsCount, referenceConnectionsCount);
     if(connectionsCount != referenceConnectionsCount){
         return false;
     }
@@ -109,10 +111,10 @@ void htmlLog(listClassical_t* list, const char* callFileName, const char* callFu
 
     fileDescription logFile = {};
     if (logCount == 0) {
-        logFile = (fileDescription){ HTML_LOG_FILE_NAME, "wb" };
+        logFile = (fileDescription){ LOG_FILE_NAME, "wb" };
     } 
     else {
-        logFile = (fileDescription){ HTML_LOG_FILE_NAME, "ab" };
+        logFile = (fileDescription){ LOG_FILE_NAME, "ab" };
     }
 
     FILE* logFilePtr = myOpenFile(&logFile);
@@ -269,7 +271,7 @@ void listGraphDump(listClassical_t* list){
     assert(graphFilePtr);
     $
 
-    printf("curCell = %p, dummy = %p\n", *next(list, *next(list, list->dummy)), list->dummy);
+    LPRINTF("curCell = %p, dummy = %p\n", *next(list, *next(list, list->dummy)), list->dummy);
     fprintf(graphFilePtr, "digraph G {\n");
     fprintf(graphFilePtr, "rankdir=LR\n");
     fprintf(graphFilePtr, "bgcolor=\"transparent\"\n");
@@ -284,7 +286,7 @@ void listGraphDump(listClassical_t* list){
     fprintf(graphFilePtr, "node%d [label=\"address = %p | data = PZN | {tail = %p | head = %p} \", shape=record, style=\"filled\", fillcolor=\"#222222\", fontcolor=\"yellow\", color=\"yellow\", penwidth=2];\n", (listVal_t)(uintptr_t) list->dummy, list->dummy, *tail(list), *head(list));
     
     for(listClassicalElem_t* curCell = *head(list); *data(list, curCell) != LIST_CLASSICAL_POISON; curCell = *next(list, curCell)){
-        fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | {prev = %p | next = %p} \"];\n",(listVal_t)(uintptr_t) curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
+        fprintf(graphFilePtr, "\tnode%d [label=\"address = %p | data = %d | prev = %p | next = %p \"];\n",(listVal_t)(uintptr_t) curCell, curCell, *data(list, curCell), *prev(list, curCell), *next(list, curCell));
     }
     fprintf(graphFilePtr, "\n"); 
     
@@ -319,7 +321,7 @@ $
 
     fprintf(graphFilePtr, "\t");
 
-    // printf("head: %p, tail: %p\n", *head(list), *tail(list));
+    // LPRINTF("head: %p, tail: %p\n", *head(list), *tail(list));
 
     bool startPass = true;
     for(listClassicalElem_t* curCell = *head(list); (curCell != *head(list)) || startPass; curCell = *next(list, curCell)){

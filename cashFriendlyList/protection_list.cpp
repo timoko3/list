@@ -1,7 +1,9 @@
 #include "protection_list.h"
 #include "../general/file.h"
-#include "../general/debug.h"
 #include "string.h"
+
+#define DEBUG
+#include "../general/debug.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -9,7 +11,7 @@
 #include <malloc.h>
 
 static const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
-static const char* HTML_LOG_FILE_NAME       = "logList.html";
+static const char* LOG_FILE_NAME            = "logList.html";
 static const listVal_t MAX_NODE_NAME_SIZE   = 20;
 static const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng graphDumps/graphDump.dot -o graphDumps/graph%d.png";
 static const size_t CONVERSION_COMMAND_SIZE = 61;
@@ -35,12 +37,12 @@ listStatus verifyList(list_t* list, const char* function, const char* file, cons
     assert(file);
 
     if(list == NULL){
-        printf("list — нулевой указатель\n");  
+        LPRINTF("list — нулевой указатель\n");  
     } 
     else{
         if(list->elem == NULL){  
             assignErrorStruct(list, NULL_POINTER);
-            printf("data — нулевой указатель\n");
+            LPRINTF("data — нулевой указатель\n");
         }
         else if(list->capacity == 0){
             assignErrorStruct(list, CAPACITY_IS_ZERO);
@@ -65,7 +67,7 @@ listStatus verifyList(list_t* list, const char* function, const char* file, cons
         }
     }
 
-    printf("%s\n", list->status.text);
+    LPRINTF("%s\n", list->status.text);
     htmlLog(list, file, function, line, "error", "verification", -1);
     return list->status.type;
 }
@@ -105,7 +107,7 @@ static bool connectivityCheck(list_t* list){
         referenceConnectionsCount = list->size - 1;
     }
 
-    fprintf(stdout, "connectionsCount: %lu, size: %lu\n", connectionsCount, referenceConnectionsCount);
+    LPRINTF("connectionsCount: %lu, size: %lu\n", connectionsCount, referenceConnectionsCount);
     if(connectionsCount != referenceConnectionsCount){
         return false;
     }
@@ -122,10 +124,10 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
 
     fileDescription logFile = {};
     if (logCount == 0) {
-        logFile = (fileDescription){ HTML_LOG_FILE_NAME, "wb" };
+        logFile = (fileDescription){ LOG_FILE_NAME, "wb" };
     } 
     else {
-        logFile = (fileDescription){ HTML_LOG_FILE_NAME, "ab" };
+        logFile = (fileDescription){ LOG_FILE_NAME, "ab" };
     }
 
     FILE* logFilePtr = myOpenFile(&logFile);
@@ -360,7 +362,7 @@ void listGraphDump(list_t* list){
         }
         else if(curCellInd != 0){
             
-            if(*next(list, curCellInd) > list->capacity){
+            if(*next(list, curCellInd) > (listVal_t) list->capacity){
                 fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,              DIRECT_CHAIN_COLOR, BORDER_CHAIN_COLOR);
             }
             else{
@@ -386,7 +388,7 @@ void listGraphDump(list_t* list){
                 fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
             }
             else{
-                if(*next(list, curCellInd) > list->capacity){
+                if(*next(list, curCellInd) > (listVal_t) list->capacity){
                     fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false];\n", DIRECT_CHAIN_COLOR);
                 }
                 else{
@@ -406,7 +408,7 @@ void listGraphDump(list_t* list){
                     isPrevNodeBad = false;
                 }
 
-                if(*next(list, curCellInd) > list->capacity) isPrevNodeBad = true;
+                if(*next(list, curCellInd) > (listVal_t) list->capacity) isPrevNodeBad = true;
             }
         }
     }

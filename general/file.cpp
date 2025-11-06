@@ -1,12 +1,9 @@
 #include "file.h"
+#include "debug.h"
 
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <assert.h>
-
-#define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
-
-// #define DEBUG
 
 static char* getTextToBuffer(FILE* inputFile, size_t fileSize);
 static string* divideBufferToStringsStructure(char* buffer, size_t nStrings);
@@ -155,7 +152,7 @@ static void printBuffer(char* buffer){
     assert(buffer);
 
     for(size_t curSym = 0; curSym < 31; curSym++){
-        printf("Символ %ld: %d\n", curSym, buffer[curSym]);
+        LPRINTF("Символ %ld: %d\n", curSym, buffer[curSym]);
     }   
 }
 #endif /* DEBUG */
