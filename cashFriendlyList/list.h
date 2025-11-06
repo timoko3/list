@@ -15,4 +15,7 @@ listStatus listInsertToHead(list_t* list, listVal_t insValue);
 listStatus listInsertToTail(list_t* list, listVal_t insValue);
 listStatus listDelete(list_t* list, listVal_t index);
 
+// listStatus listLinearize(list_t* list);
+listStatus listFreeUnusedMem(list_t* list);
+
 #endif /* LIST_H */

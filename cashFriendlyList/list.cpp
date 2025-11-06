@@ -11,6 +11,7 @@
 
 static listStatus listInit(list_t* list, size_t startIndex = 1);
 static listStatus realocateListMem(list_t* list); //.. ьуь
+static listStatus deRealocateListMem(list_t* list);
 
 listStatus listCtor(list_t* list){
     assert(list);
@@ -109,7 +110,7 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
     #ifdef DEBUG
     verify(list);
     log(list, "before", "delete", deleteIndex);
-    #endif DEBUG
+    #endif /* DEBUG */ 
 
     *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
     *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
@@ -161,8 +162,10 @@ static listStatus realocateListMem(list_t* list){
 
     static size_t reallocationCount = 0;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "before", "reallocation", (listVal_t) reallocationCount);
+    #endif /* DEBUG */
 
     printf("difference: %lu\n", list->capacity - list->size);
 
@@ -178,8 +181,47 @@ static listStatus realocateListMem(list_t* list){
     
     reallocationCount++;
 
+    #ifdef DEBUG
     verify(list);
     log(list, "after", "reallocation", (listVal_t) reallocationCount);
+    #endif /* DEBUG */
+
+    return PROCESS_OK;
+}
+
+// listStatus listLinearize(list_t* list){
+
+// }
+
+listStatus listFreeUnusedMem(list_t* list){
+    assert(list);
+
+    #ifdef DEBUG
+    verify(list);
+    log(list, "before", "freeUnusedMem", 1);
+    #endif /* DEBUG */
+
+    listVal_t curCellInd = *head(list);
+    printf("listCurCellInd = %d, capacity = %d\n", curCellInd, list->capacity);
+    for(; (*next(list, curCellInd) != 0); curCellInd = *next(list, curCellInd)){
+        $
+        continue;
+
+    }
+    printf("listCurCellInd = %d, capacity = %d\n", curCellInd, list->capacity);
+
+    list->capacity = curCellInd + 1 ;  
+
+    printf("listCurCellInd = %d, capacity = %d\n", curCellInd, list->capacity);
+    listElem_t* temp = (listElem_t*) realloc(list->elem, list->capacity * sizeof(listElem_t));
+    assert(temp);
+
+    list->elem = temp;
+
+    #ifdef DEBUG
+    verify(list);
+    log(list, "after", "freeUnusedMem", 1);
+    #endif /* DEBUG */ 
 
     return PROCESS_OK;
 }

@@ -32,7 +32,7 @@ static struct listStatusDescription listStatuses[]{
     {NULL_POINTER,                  "Указатели не должны быть нулевыми\n"},
     {CAPACITY_IS_ZERO,              "Capacity равно 0\n"}, 
     {BAD_MEMORY_ALLOCATION,         "Некорректное выделение памяти\n"},
-    {SIZE_EXCEEDS_CAPACITY,         "Размер стека превышает объем выделяемой памяти\n"},
+    {SIZE_EXCEEDS_CAPACITY,         "Размер списка превышает объем выделяемой памяти\n"},
     {NON_VALID_INDEXES,             "prev или next имеют значение не принадлежащее списку\n"},
     {LIST_NOT_CONNECTED,            "Список не соединен или соединен не верно\n"}
 };
