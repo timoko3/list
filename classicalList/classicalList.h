@@ -4,7 +4,7 @@
 #include "protection_classical_list.h"
 #include "general_classical_list.h"
 
-#define DEBUG
+// #define DEBUG
 
 typedef listClassicalElem_t* curAnchorNode;
 

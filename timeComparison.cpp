@@ -1,9 +1,10 @@
 #include "cashFriendlyList/list.h"
 #include "classicalList/classicalList.h"
+#include "general/file.h"
 
 #include <time.h>
 
-const size_t ITERATIONS_AMOUNT = 1000;
+const size_t ITERATIONS_AMOUNT = 1e9;
 
 int main(void){
     list_t listCashFriendly;
@@ -36,10 +37,21 @@ int main(void){
 
     printf("time classical: %lf\n", execution_time_classical);
 
-    printf("\nCashFriendlyList is %.2lf times faster than classicalList(amount of iterations %lu)\n", 
+    fileDescription logPerformanceTest{
+        "perf_results_v2.csv",
+        "ab"
+    };
+
+    
+    FILE* logPtr = myOpenFile(&logPerformanceTest);
+    fprintf(logPtr, " %.2lf   %lu\n", 
             execution_time_classical / execution_time_cash_friendly,
             ITERATIONS_AMOUNT );
 
+    printf("\nCashFriendlyList is %.2lf times faster than classicalList(amount of iterations %lu)\n", 
+        execution_time_classical / execution_time_cash_friendly,
+        ITERATIONS_AMOUNT );
+    fclose(logPtr);
     listDtor(&listCashFriendly);
 
     listClassicalDtor(&listClassical);
