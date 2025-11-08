@@ -3,8 +3,9 @@
 
 #include <limits.h>
 #include <stddef.h>
+#include <stdarg.h>
 
-#define log(list1, callCase, actionName, parameter) htmlLog(list1, __FILE__, __FUNCTION__, __LINE__, callCase, actionName, parameter)
+#define log(list1, text, ...) htmlLog(list1, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
 typedef int listVal_t;
 

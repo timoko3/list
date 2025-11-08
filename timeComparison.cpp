@@ -4,7 +4,7 @@
 
 #include <time.h>
 
-const size_t ITERATIONS_AMOUNT = 1e9;
+const size_t ITERATIONS_AMOUNT = 1e7;
 
 int main(void){
     list_t listCashFriendly;

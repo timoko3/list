@@ -10,8 +10,7 @@
 #define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
 
 static listStatus listInit(list_t* list, size_t startIndex = 1);
-static listStatus reallocateList(list_t* list); //.. ьуь
-static listStatus deRealocateListMem(list_t* list);
+static listStatus reallocateList(list_t* list); 
 static void placeNodeRight(list_t* list, listVal_t logicalInd, listVal_t physicalInd);
 
 listStatus listCtor(list_t* list){
@@ -39,7 +38,7 @@ listStatus listDtor(list_t* list){
 
     poisonMemory(&list->size,        sizeof(list->size));
     poisonMemory(&list->capacity,    sizeof(list->capacity));
-    poisonMemory(&*freeInd(list), sizeof(*freeInd(list)));
+    poisonMemory(&*freeInd(list),    sizeof(*freeInd(list)));
     poisonMemory(&list->status,      sizeof(list->status));
 
     return PROCESS_OK;
@@ -50,7 +49,7 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
 
     #ifdef DEBUG
     verify(list);
-    log(list, "before", "insertAfter", insIndex);
+    log(list, "before %s %d", "insertAfter", insIndex);
     #endif /* DEBUG */
 
     if((list->capacity - list->size) <= 2){
@@ -74,7 +73,7 @@ listStatus listInsertAfter(list_t* list, listVal_t insIndex, listVal_t insValue)
 
     #ifdef DEBUG
     verify(list);
-    log(list, "after", "insertAfter", insIndex);
+    log(list, "after %s %d", "insertAfter", insIndex);
     #endif /* DEBUG */
 
     return PROCESS_OK;
@@ -110,7 +109,7 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "before", "delete", deleteIndex);
+    log(list, "before %s %d", "delete", deleteIndex);
     #endif /* DEBUG */ 
 
     *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
@@ -129,7 +128,7 @@ listStatus listDelete(list_t* list, listVal_t deleteIndex){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "after", "delete", deleteIndex);
+    log(list, "after %s %d", "delete", deleteIndex);
     #endif /* DEBUG */
 
     return PROCESS_OK;
@@ -162,7 +161,7 @@ listStatus listLinearize(list_t* list){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "before", "linearization", 1);
+    log(list, "before %s", "linearization");
     #endif /* DEBUG */
 
     listVal_t logicalInd = *head(list);
@@ -182,7 +181,7 @@ listStatus listLinearize(list_t* list){
 
     #ifdef DEBUG
     // verify(list);
-    log(list, "after", "linearization", 1);
+    log(list, "after %s", "linearization");
     #endif /* DEBUG */ 
 
     return PROCESS_OK;
@@ -193,7 +192,7 @@ listStatus listFreeUnusedMem(list_t* list){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "before", "freeUnusedMem", 1);
+    log(list, "before %s", "linearization");
     #endif /* DEBUG */
 
     listVal_t curCellInd = *head(list);
@@ -214,7 +213,7 @@ listStatus listFreeUnusedMem(list_t* list){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "after", "freeUnusedMem", 1);
+    log(list, "after %s", "linearization");
     #endif /* DEBUG */ 
 
     return PROCESS_OK;
@@ -254,7 +253,7 @@ static listStatus reallocateList(list_t* list){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "before", "reallocation", (listVal_t) reallocationCount);
+    log(list, "before %s %d", "reallocation", (listVal_t) reallocationCount);
     #endif /* DEBUG */
 
     LPRINTF("difference: %lu\n", list->capacity - list->size);
@@ -273,7 +272,7 @@ static listStatus reallocateList(list_t* list){
 
     #ifdef DEBUG
     verify(list);
-    log(list, "after", "reallocation", (listVal_t) reallocationCount);
+    log(list, "after %s %d", "reallocation", (listVal_t) reallocationCount);
     #endif /* DEBUG */
 
     return PROCESS_OK;

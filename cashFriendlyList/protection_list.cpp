@@ -115,12 +115,11 @@ static bool connectivityCheck(list_t* list){
 }
 
 void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, int callLine,
-             const char* callCase, const char* actionName, listVal_t parameter){
+             const char* dumpDescription, ...){
     assert(list);
     assert(callFileName);
     assert(callFuncName);
-    assert(callCase);
-    assert(actionName);
+    assert(dumpDescription);
 
     fileDescription logFile = {};
     if (logCount == 0) {
@@ -142,12 +141,12 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
             "<style>"
               "body{font-family:'Segoe UI',Tahoma,sans-serif;background:#e6ecf2;color:#1e272e;margin:20px;font-size:18px;line-height:1.6;}"
               "h2,h3,h4{margin:8px 0 6px 0;}"
-              ".dump-card{background:#ffffff;border-radius:14px;padding:22px 26px;box-shadow:0 6px 22px rgba(0,0,0,0.12);margin-bottom:36px;}"
+              ".dump-card{background:#ffffff;border-radius:14px;padding:10px 15px;box-shadow:0 6px 22px rgba(0,0,0,0.12);margin-bottom:36px;}"
               ".dump-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px;}"
               ".case-badge{font-weight:700;color:#fff;padding:8px 14px;border-radius:8px;font-size:1.2rem;}"
               ".case-badge.error{background:#ff5252;} .case-badge.info{background:#007bff;} .case-badge.ok{background:#00b894;}"
               ".location{background:#fff2cc;border-left:8px solid #ffb300;padding:12px 16px;border-radius:10px;font-size:1.05rem;line-height:1.4;}"
-              "table{border-collapse:collapse;width:100%%;font-family:monospace;margin-top:14px;font-size:1rem;}"
+              "table{border-collapse:collapse;width:10%%;font-family:monospace;margin-top:14px;font-size:1rem;}"
               "th,td{border:1px solid #d0d7de;padding:10px 14px;text-align:center;}"
               "th{background:#f0f4fa;font-weight:700;}"
               ".used{color:#006400;font-weight:700;}"
@@ -163,29 +162,27 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     const char* caseClass = "info";
     if (list->status.type != PROCESS_OK) caseClass = "error";
 
-    fprintf(logFilePtr,
-        "<div class=\"dump-header\">"
-          "<div>"
-            "<h2 style=\"margin:0; font-size:1.8rem;\"> DUMP — "
-            "<span class=\"case-badge %s\">%s</span> "
-            "<span style=\"margin-left:10px; color:#333;\">%s(%d)</span>"
-            "</h2>"
-          "</div>"
-          "<div class=\"location\">"
+    fprintf(logFilePtr, "<div class=\"dump-header\">"
+                        "<div>"
+                        "<h2 style=\"margin:0; font-size:1.8rem;\"> DUMP — <span style=\"margin-left:10px; color:#333;\"> ");
+
+    va_list args;
+    va_start(args, dumpDescription);
+    vfprintf(logFilePtr,  dumpDescription, args);
+    va_end(args);
+
+    fprintf(logFilePtr, "</span>"
+                        "</h2>"
+                        "</div>");
+
+    fprintf(logFilePtr,          
+            "<div class=\"location\">"
             "<b>File:</b> %s<br>"
             "<b>Function:</b> %s<br>"
             "<b>Line:</b> %d"
           "</div>"
-        "</div>\n",
-        caseClass, callCase, actionName, parameter,
-        callFileName, callFuncName, callLine);
-
-    if (parameter == -1) {
-        fprintf(logFilePtr,
-            "<p style=\"color:#b00020;font-weight:700;margin-top:12px;font-size:1.1rem;\">%s</p>\n",
-            list->status.text);
-    }
-
+        "</div>\n", callFileName, callFuncName, callLine);
+    
     /* Переменные списка */
     fprintf(logFilePtr,
         "<h4 style=\"margin-top:16px;margin-bottom:8px;font-size:1.3rem;\"> Переменные списка</h4>\n"
