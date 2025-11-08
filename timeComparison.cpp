@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-const size_t ITERATIONS_AMOUNT = 100000;
+const size_t ITERATIONS_AMOUNT = 1000;
 
 int main(void){
     list_t listCashFriendly;

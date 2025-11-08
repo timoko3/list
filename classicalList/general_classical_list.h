@@ -37,7 +37,7 @@ static struct listClassicalStatusDescription listClassicalStatuses[]{
 };
 
 struct listClassicalElem_t{
-    listVal_t   data;
+    listVal_t            data;
     listClassicalElem_t* next;
     listClassicalElem_t* prev;
 };
@@ -49,9 +49,9 @@ struct listClassical_t{
     listClassicalStatusDescription  status;
 };
 
-listVal_t*  data(listClassical_t* list, listClassicalElem_t* elem);
-listClassicalElem_t** next(listClassical_t* list, listClassicalElem_t* elem);
+listVal_t*            data(listClassical_t* list, listClassicalElem_t* elem);
 listClassicalElem_t** prev(listClassical_t* list, listClassicalElem_t* elem);
+listClassicalElem_t** next(listClassical_t* list, listClassicalElem_t* elem);
 listClassicalElem_t** head(listClassical_t* list);
 listClassicalElem_t** tail(listClassical_t* list);
 
