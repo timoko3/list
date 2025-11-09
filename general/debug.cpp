@@ -9,7 +9,7 @@ static const char* LOG_FILE_NAME            = "logList.html";
 
 void lprintf(const char* text, ...){
     assert(text);
-
+    
     fileDescription logFile = {
         LOG_FILE_NAME,
         "ab"

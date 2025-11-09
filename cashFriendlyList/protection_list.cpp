@@ -135,26 +135,24 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     /* Заголовок и стили */
     if (logCount == 0) {
         fprintf(logFilePtr,
-            "<!DOCTYPE html><html lang=\"ru\"><head>"
-            "<meta charset=\"utf-8\">"
-            "<title>List Dump Log</title>"
-            "<style>"
-              "body{font-family:'Segoe UI',Tahoma,sans-serif;background:#e6ecf2;color:#1e272e;margin:20px;font-size:18px;line-height:1.6;}"
-              "h2,h3,h4{margin:8px 0 6px 0;}"
-              ".dump-card{background:#ffffff;border-radius:14px;padding:10px 15px;box-shadow:0 6px 22px rgba(0,0,0,0.12);margin-bottom:36px;}"
-              ".dump-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px;}"
-              ".case-badge{font-weight:700;color:#fff;padding:8px 14px;border-radius:8px;font-size:1.2rem;}"
-              ".case-badge.error{background:#ff5252;} .case-badge.info{background:#007bff;} .case-badge.ok{background:#00b894;}"
-              ".location{background:#fff2cc;border-left:8px solid #ffb300;padding:12px 16px;border-radius:10px;font-size:1.05rem;line-height:1.4;}"
-              "table{border-collapse:collapse;width:10%%;font-family:monospace;margin-top:14px;font-size:1rem;}"
-              "th,td{border:1px solid #d0d7de;padding:10px 14px;text-align:center;}"
-              "th{background:#f0f4fa;font-weight:700;}"
-              ".used{color:#006400;font-weight:700;}"
-              ".free{background:#ffeef0;color:#9c2c3c;}"
-              ".graph-wrap{text-align:center;margin-top:18px;}"
-              ".graph-link{display:inline-block;border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);}"
-              ".small-meta{color:#444;font-size:0.95rem;margin-top:8px;}"
-            "</style></head><body>\n");
+        "<style>"
+        "body{font-family:'Segoe UI',Tahoma,monospace;background:#f4f6f9;color:#111;margin:6px 12px;font-size:12px;line-height:1.1;}"
+        "h2,h3,h4{margin:3px 0 2px 0;font-size:14px;}"
+        ".dump-card{background:#fff;border-radius:6px;padding:4px 6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:10px;}"
+        ".dump-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;margin-bottom:4px;}"
+        ".case-badge{font-weight:700;color:#fff;padding:2px 6px;border-radius:4px;font-size:0.8rem;}"
+        ".case-badge.error{background:#ff5252;} .case-badge.info{background:#007bff;} .case-badge.ok{background:#00b894;}"
+        ".location{background:#fff2cc;border-left:4px solid #ffb300;padding:4px 6px;border-radius:4px;font-size:0.75rem;line-height:1.1;}"
+        "table{border-collapse:collapse;width:100%%;font-family:monospace;margin-top:3px;font-size:0.8rem;table-layout:fixed;}"
+        "th,td{border:0.5px solid #bbb;padding:1px 3px;text-align:center;vertical-align:middle;}"
+        "th{background:#eef2f5;font-weight:600;}"
+        "td{height:14px;}"
+        ".used{color:#003c00;font-weight:600;}"
+        ".free{background:#fff4f4;color:#a33;}"
+        ".graph-wrap{text-align:center;margin-top:6px;}"
+        ".graph-link{display:inline-block;border-radius:4px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);}"
+        ".small-meta{color:#555;font-size:0.7rem;margin-top:2px;}"
+        "</style></head><body>\n");
     }
 
     fprintf(logFilePtr, "<div class=\"dump-card\">\n");

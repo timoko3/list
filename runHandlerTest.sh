@@ -1,0 +1,1 @@
+g++ measuresHandler/*.cpp general/*.cpp -o handler.out

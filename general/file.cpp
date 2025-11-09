@@ -147,6 +147,18 @@ bool getIntNumsToBuffer(fileDescription file, size_t fileSize, int** buffer){
     return true;
 }
 
+bool getDoubleNumsToBuffer(fileDescription file, size_t fileSize, double** buffer){
+    assert(buffer);
+
+    FILE* byteCodeFile = myOpenFile(&file);
+    assert(byteCodeFile);
+
+    fread(*buffer, 1, fileSize, byteCodeFile);
+    fclose(byteCodeFile);
+    
+    return true;
+}
+
 #ifdef DEBUG
 static void printBuffer(char* buffer){
     assert(buffer);

@@ -4,7 +4,7 @@
 
 #include <time.h>
 
-const size_t ITERATIONS_AMOUNT = 1e7;
+const size_t ITERATIONS_AMOUNT = 1e8;
 
 int main(void){
     list_t listCashFriendly;
@@ -15,7 +15,6 @@ int main(void){
     listClassical_t listClassical;
 
     listClassicalCtor(&listClassical);
-
 
     clock_t start_time = clock();
     for(size_t iteration = 0; iteration < ITERATIONS_AMOUNT; iteration++){

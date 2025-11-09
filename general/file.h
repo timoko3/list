@@ -37,5 +37,6 @@ FILE* myOpenFile(fileDescription* file);
 
 void writeOpcode(buffer_t* buffer, const char* fileName);
 bool getIntNumsToBuffer(fileDescription file, size_t fileSize, int** buffer);
+bool getDoubleNumsToBuffer(fileDescription file, size_t fileSize, double** buffer);
 
 #endif /*FILE_PARSE_H*/
